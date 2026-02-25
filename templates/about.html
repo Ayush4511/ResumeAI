@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}About - ResumeAI{% endblock %}
+{% block content %}
+<section class="about-page">
+    <div class="container">
+        <div class="page-header">
+            <div class="section-badge">About</div>
+            <h1>How <span class="gradient-text">ResumeAI</span> Works</h1>
+            <p>A college project built to help job seekers optimize their resumes for ATS systems</p>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text">
+                <h2>The ATS Problem</h2>
+                <p>Over 75% of resumes never reach a human recruiter because they fail Applicant Tracking System (ATS) filters. These automated systems scan resumes for keywords, formatting, and structure before any human sees them.</p>
+                <p>ResumeAI simulates how an ATS evaluates your resume, giving you a detailed score and specific suggestions to improve your chances.</p>
+
+                <h2 style="margin-top:2rem">Tech Stack</h2>
+                <div class="tech-stack">
+                    <div class="tech-item"><i class="fab fa-python"></i> Python 3</div>
+                    <div class="tech-item"><i class="fas fa-flask"></i> Flask</div>
+                    <div class="tech-item"><i class="fas fa-database"></i> SQLite</div>
+                    <div class="tech-item"><i class="fab fa-html5"></i> HTML5</div>
+                    <div class="tech-item"><i class="fab fa-css3-alt"></i> CSS3</div>
+                    <div class="tech-item"><i class="fab fa-js"></i> JavaScript</div>
+                </div>
+
+                <h2 style="margin-top:2rem">How Scores Are Calculated</h2>
+                <div class="score-weights">
+                    <div class="weight-item">
+                        <span>Content Quality</span>
+                        <div class="weight-bar">
+                            <div class="weight-fill" style="width:30%"></div>
+                        </div>
+                        <span>30%</span>
+                    </div>
+                    <div class="weight-item">
+                        <span>Sections Coverage</span>
+                        <div class="weight-bar">
+                            <div class="weight-fill" style="width:20%;background:#3b82f6"></div>
+                        </div>
+                        <span>20%</span>
+                    </div>
+                    <div class="weight-item">
+                        <span>Format & Brevity</span>
+                        <div class="weight-bar">
+                            <div class="weight-fill" style="width:20%;background:#f59e0b"></div>
+                        </div>
+                        <span>20%</span>
+                    </div>
+                    <div class="weight-item">
+                        <span>Style</span>
+                        <div class="weight-bar">
+                            <div class="weight-fill" style="width:15%;background:#8b5cf6"></div>
+                        </div>
+                        <span>15%</span>
+                    </div>
+                    <div class="weight-item">
+                        <span>Skills & Keywords</span>
+                        <div class="weight-bar">
+                            <div class="weight-fill" style="width:15%;background:#0ea5e9"></div>
+                        </div>
+                        <span>15%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-sidebar">
+                <div class="about-card">
+                    <h3>Project Details</h3>
+                    <ul class="about-details">
+                        <li><i class="fas fa-user"></i> <strong>Type:</strong> College Submission</li>
+                        <li><i class="fas fa-code"></i> <strong>Backend:</strong> Flask + SQLite</li>
+                        <li><i class="fas fa-paint-brush"></i> <strong>Frontend:</strong> HTML/CSS/JS</li>
+                        <li><i class="fas fa-brain"></i> <strong>AI:</strong> Rule-based NLP</li>
+                        <li><i class="fas fa-shield-alt"></i> <strong>Privacy:</strong> Files auto-deleted</li>
+                    </ul>
+                </div>
+
+                <div class="about-card" style="margin-top:1.5rem">
+                    <h3>Score Guide</h3>
+                    <div class="grade-guide">
+                        <div class="grade-item">
+                            <span class="grade-dot" style="background:#10b981"></span>
+                            <span>85-100: Excellent</span>
+                        </div>
+                        <div class="grade-item">
+                            <span class="grade-dot" style="background:#3b82f6"></span>
+                            <span>70-84: Good</span>
+                        </div>
+                        <div class="grade-item">
+                            <span class="grade-dot" style="background:#f59e0b"></span>
+                            <span>55-69: Average</span>
+                        </div>
+                        <div class="grade-item">
+                            <span class="grade-dot" style="background:#ef4444"></span>
+                            <span>0-54: Needs Work</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('check') }}" class="btn-primary" style="width:100%;text-align:center;margin-top:1.5rem">
+                    <i class="fas fa-upload"></i> Try It Now
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

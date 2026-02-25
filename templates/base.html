@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}ResumeAI - ATS Resume Checker{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}"/>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ─── Navigation ─────────────────────────────────────────────────────────── -->
+<nav class="navbar" id="navbar">
+    <div class="nav-container">
+        <a href="{{ url_for('index') }}" class="nav-logo">
+            <div class="logo-icon">
+                <i class="fas fa-file-alt"></i>
+            </div>
+            <span class="logo-text">Resume<span class="logo-accent">AI</span></span>
+        </a>
+
+        <ul class="nav-links" id="navLinks">
+            <li><a href="{{ url_for('index') }}" class="nav-link">Home</a></li>
+            <li><a href="{{ url_for('check') }}" class="nav-link">Check Resume</a></li>
+            <li><a href="{{ url_for('history') }}" class="nav-link">History</a></li>
+            <li><a href="{{ url_for('about') }}" class="nav-link">About</a></li>
+        </ul>
+
+        <div class="nav-actions">
+            <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+            <a href="{{ url_for('check') }}" class="btn-nav-cta">
+                <i class="fas fa-upload"></i> Check My Resume
+            </a>
+            <button class="hamburger" id="hamburger">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ─── Main Content ────────────────────────────────────────────────────────── -->
+<main>
+    {% block content %}{% endblock %}
+</main>
+
+<!-- ─── Footer ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-grid">
+            <div class="footer-brand">
+                <div class="logo-text" style="font-size:1.5rem;font-weight:800;">
+                    Resume<span class="logo-accent">AI</span>
+                </div>
+                <p>Free AI-powered ATS resume checker. Get your resume noticed by top companies.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="{{ url_for('check') }}">Resume Checker</a></li>
+                    <li><a href="{{ url_for('history') }}">My Analyses</a></li>
+                    <li><a href="{{ url_for('about') }}">How It Works</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Resume Tips</a></li>
+                    <li><a href="#">ATS Guide</a></li>
+                    <li><a href="#">Career Blog</a></li>
+                    <li><a href="#">Interview Prep</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="{{ url_for('about') }}">About Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2024 ResumeAI. Built for college submission with ❤️ using Flask & SQLite.</p>
+            <p class="footer-tech">Flask · SQLite · Python · HTML/CSS/JS</p>
+        </div>
+    </div>
+</footer>
+
+<!-- ─── Toast Notification ──────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<!-- Scripts -->
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

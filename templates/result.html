@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+{% block title %}Resume Score {{ analysis.overall_score }}/100 - ResumeAI{% endblock %}
+
+{% block content %}
+<div class="result-page">
+
+    <!-- ─── Score Header ───────────────────────────────────────────────── -->
+    <div class="result-hero" style="--grade-color: {{ analysis.grade_color }}">
+        <div class="result-hero-inner">
+            <div class="result-grade-badge">{{ analysis.grade }}</div>
+            <h1>Resume Analysis Complete</h1>
+            <p class="result-filename">{{ row['filename'] }}</p>
+
+            <div class="result-score-ring">
+                <svg viewBox="0 0 200 200" class="score-svg">
+                    <circle class="score-ring-bg" cx="100" cy="100" r="80"/>
+                    <circle class="score-ring-fill" cx="100" cy="100" r="80"
+                            style="stroke: {{ analysis.grade_color }};
+                                   stroke-dasharray: 502;
+                                   stroke-dashoffset: {{ 502 - (502 * analysis.overall_score / 100)|int }};"/>
+                </svg>
+                <div class="score-center">
+                    <div class="score-number" id="scoreCounter" data-target="{{ analysis.overall_score }}">0</div>
+                    <div class="score-label">/ 100</div>
+                </div>
+            </div>
+
+            <div class="result-meta">
+                <div class="meta-pill"><i class="fas fa-exclamation-triangle"></i> {{ analysis.issues_found }} Issues Found</div>
+                <div class="meta-pill"><i class="fas fa-file-word"></i> {{ analysis.word_count }} Words</div>
+                <div class="meta-pill"><i class="fas fa-clock"></i> Analyzed just now</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── Score Breakdown ─────────────────────────────────────────────── -->
+    <div class="result-container">
+        <div class="result-grid">
+
+            <!-- LEFT COLUMN: Detailed Scores -->
+            <div class="result-left">
+                <div class="result-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-chart-bar"></i> Score Breakdown</h2>
+                    </div>
+
+                    <div class="breakdown-list">
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-tachometer-alt" style="color:#10b981"></i>
+                                    ATS Parse Rate
+                                </span>
+                                <span class="breakdown-score" style="color:#10b981">
+                                    {{ analysis.ats_parse_rate }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.ats_parse_rate }}%;background:#10b981" data-width="{{ analysis.ats_parse_rate }}"></div>
+                            </div>
+                            <p class="breakdown-hint">How much of your resume ATS bots can interpret</p>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-pen-fancy" style="color:#3b82f6"></i>
+                                    Content Quality
+                                </span>
+                                <span class="breakdown-score" style="color:#3b82f6">
+                                    {{ analysis.content_score }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.content_score }}%;background:#3b82f6" data-width="{{ analysis.content_score }}"></div>
+                            </div>
+                            <p class="breakdown-hint">Action verbs, quantified results, impact statements</p>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-file-alt" style="color:#f59e0b"></i>
+                                    Format & Brevity
+                                </span>
+                                <span class="breakdown-score" style="color:#f59e0b">
+                                    {{ analysis.format_score }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.format_score }}%;background:#f59e0b" data-width="{{ analysis.format_score }}"></div>
+                            </div>
+                            <p class="breakdown-hint">File type, resume length, bullet point optimization</p>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-palette" style="color:#8b5cf6"></i>
+                                    Style
+                                </span>
+                                <span class="breakdown-score" style="color:#8b5cf6">
+                                    {{ analysis.style_score }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.style_score }}%;background:#8b5cf6" data-width="{{ analysis.style_score }}"></div>
+                            </div>
+                            <p class="breakdown-hint">Contact info, consistency, readability</p>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-th-list" style="color:#ef4444"></i>
+                                    Sections
+                                </span>
+                                <span class="breakdown-score" style="color:#ef4444">
+                                    {{ analysis.sections_score }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.sections_score }}%;background:#ef4444" data-width="{{ analysis.sections_score }}"></div>
+                            </div>
+                            <p class="breakdown-hint">Essential resume sections coverage</p>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <span class="breakdown-label">
+                                    <i class="fas fa-tags" style="color:#0ea5e9"></i>
+                                    Skills & Keywords
+                                </span>
+                                <span class="breakdown-score" style="color:#0ea5e9">
+                                    {{ analysis.skills_score }}%
+                                </span>
+                            </div>
+                            <div class="breakdown-bar">
+                                <div class="breakdown-fill" style="width:{{ analysis.skills_score }}%;background:#0ea5e9" data-width="{{ analysis.skills_score }}"></div>
+                            </div>
+                            <p class="breakdown-hint">Technical & soft skills keyword density</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info Card -->
+                <div class="result-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-address-card"></i> Contact Information</h2>
+                    </div>
+                    <div class="contact-checks">
+                        <div class="contact-item {{ 'check-pass' if analysis.contact_info.has_email else 'check-fail' }}">
+                            <i class="fas {{ 'fa-check-circle' if analysis.contact_info.has_email else 'fa-times-circle' }}"></i>
+                            <span>Email Address</span>
+                        </div>
+                        <div class="contact-item {{ 'check-pass' if analysis.contact_info.has_phone else 'check-fail' }}">
+                            <i class="fas {{ 'fa-check-circle' if analysis.contact_info.has_phone else 'fa-times-circle' }}"></i>
+                            <span>Phone Number</span>
+                        </div>
+                        <div class="contact-item {{ 'check-pass' if analysis.contact_info.has_linkedin else 'check-warn' }}">
+                            <i class="fas {{ 'fa-check-circle' if analysis.contact_info.has_linkedin else 'fa-exclamation-circle' }}"></i>
+                            <span>LinkedIn Profile</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Keywords Found -->
+                {% if analysis.keywords_found %}
+                <div class="result-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-tags"></i> Keywords Detected</h2>
+                    </div>
+                    <div class="keyword-chips">
+                        {% for kw in analysis.keywords_found %}
+                        <span class="keyword-chip">{{ kw }}</span>
+                        {% endfor %}
+                    </div>
+                    <p style="margin-top:0.75rem;color:var(--text-secondary);font-size:0.85rem">
+                        Found {{ analysis.keywords_found|length }} relevant technical keywords.
+                        {% if analysis.keywords_found|length < 5 %}
+                        Add more industry-specific keywords to improve your score.
+                        {% endif %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- RIGHT COLUMN: Issues & Suggestions -->
+            <div class="result-right">
+                <!-- Quick Stats -->
+                <div class="quick-stats">
+                    <div class="qs-item">
+                        <div class="qs-icon"><i class="fas fa-bolt"></i></div>
+                        <div class="qs-value">{{ analysis.action_verbs_count }}</div>
+                        <div class="qs-label">Action Verbs</div>
+                    </div>
+                    <div class="qs-item">
+                        <div class="qs-icon" style="background:linear-gradient(135deg,#10b981,#059669)"><i class="fas fa-hashtag"></i></div>
+                        <div class="qs-value">{{ analysis.quantified_achievements }}</div>
+                        <div class="qs-label">Metrics Found</div>
+                    </div>
+                    <div class="qs-item">
+                        <div class="qs-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><i class="fas fa-exclamation"></i></div>
+                        <div class="qs-value">{{ analysis.issues_found }}</div>
+                        <div class="qs-label">Issues</div>
+                    </div>
+                </div>
+
+                <!-- Issues Found -->
+                {% if analysis.issues %}
+                <div class="result-card issues-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-exclamation-triangle" style="color:#f59e0b"></i> Issues Found</h2>
+                        <span class="issue-count">{{ analysis.issues|length }}</span>
+                    </div>
+                    <ul class="issues-list">
+                        {% for issue in analysis.issues %}
+                        <li class="issue-item">
+                            <i class="fas fa-times-circle"></i>
+                            <span>{{ issue }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Suggestions -->
+                {% if analysis.suggestions %}
+                <div class="result-card suggestions-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-lightbulb" style="color:#10b981"></i> How to Improve</h2>
+                    </div>
+                    <ul class="suggestions-list">
+                        {% for tip in analysis.suggestions %}
+                        <li class="suggestion-item">
+                            <i class="fas fa-arrow-right"></i>
+                            <span>{{ tip }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <!-- Actions -->
+                <div class="result-actions">
+                    <a href="{{ url_for('check') }}" class="btn-primary">
+                        <i class="fas fa-redo"></i> Check Another Resume
+                    </a>
+                    <button class="btn-ghost" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print Results
+                    </button>
+                    <button class="btn-ghost" onclick="shareResults()">
+                        <i class="fas fa-share-alt"></i> Share Score
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate score counter
+const scoreEl = document.getElementById('scoreCounter');
+const target = parseInt(scoreEl.dataset.target);
+let current = 0;
+const increment = target / 60;
+const timer = setInterval(() => {
+    current = Math.min(current + increment, target);
+    scoreEl.textContent = Math.round(current);
+    if (current >= target) clearInterval(timer);
+}, 20);
+
+// Animate bars on load
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.querySelectorAll('.breakdown-fill').forEach(bar => {
+            bar.style.transition = 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+        });
+    }, 300);
+});
+
+// Share function
+function shareResults() {
+    const score = {{ analysis.overall_score }};
+    const text = `My resume scored ${score}/100 on ResumeAI! Check yours at ${window.location.origin}`;
+    if (navigator.share) {
+        navigator.share({ title: 'My Resume Score', text, url: window.location.href });
+    } else {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Score copied to clipboard!');
+        });
+    }
+}
+</script>
+{% endblock %}

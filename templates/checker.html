@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+{% block title %}Upload Resume - ResumeAI{% endblock %}
+
+{% block content %}
+<section class="checker-page">
+    <div class="checker-header">
+        <div class="section-badge">Free Tool</div>
+        <h1>Is Your Resume <span class="gradient-text">Good Enough?</span></h1>
+        <p>A free and fast AI resume checker doing 16 crucial checks to ensure your resume is ready to get you interview callbacks.</p>
+    </div>
+
+    <!-- Upload Area -->
+    <div class="checker-container">
+        <div class="upload-box" id="uploadBox">
+            <div class="upload-idle" id="uploadIdle">
+                <div class="upload-icon-wrap">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                </div>
+                <h3>Drop your resume here or</h3>
+                <label for="fileInput" class="btn-primary btn-upload">
+                    <i class="fas fa-folder-open"></i> Choose File
+                </label>
+                <input type="file" id="fileInput" accept=".pdf,.docx" hidden/>
+                <p class="upload-hint">PDF & DOCX only · Max 2MB · Privacy guaranteed <i class="fas fa-lock"></i></p>
+            </div>
+
+            <!-- File Selected State -->
+            <div class="upload-selected" id="uploadSelected" style="display:none">
+                <div class="file-info">
+                    <div class="file-icon"><i class="fas fa-file-alt"></i></div>
+                    <div class="file-details">
+                        <strong id="selectedFileName">resume.pdf</strong>
+                        <span id="selectedFileSize">124 KB</span>
+                    </div>
+                    <button class="file-remove" id="removeFile" title="Remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <button class="btn-primary btn-analyze" id="analyzeBtn">
+                    <i class="fas fa-brain"></i> Analyze My Resume
+                </button>
+            </div>
+
+            <!-- Progress State -->
+            <div class="upload-progress" id="uploadProgress" style="display:none">
+                <div class="progress-spinner">
+                    <div class="spinner-ring"></div>
+                </div>
+                <div class="progress-steps" id="progressSteps">
+                    <div class="progress-step active" data-step="1">
+                        <i class="fas fa-upload"></i> Uploading file...
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <i class="fas fa-file-search"></i> Extracting content...
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <i class="fas fa-brain"></i> Running AI analysis...
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <i class="fas fa-chart-bar"></i> Calculating scores...
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div class="upload-error" id="uploadError" style="display:none">
+                <div class="error-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <h3>Oops! Something went wrong</h3>
+                <p id="errorMessage">Please try again.</p>
+                <button class="btn-ghost" id="retryBtn">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+            </div>
+        </div>
+
+        <!-- Drag overlay -->
+        <div class="drag-overlay" id="dragOverlay">
+            <div class="drag-inner">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Drop to analyze!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Preview Below Upload -->
+    <div class="checker-features">
+        <div class="cf-item">
+            <i class="fas fa-bolt" style="color:#f59e0b"></i>
+            <span>Instant Results</span>
+        </div>
+        <div class="cf-item">
+            <i class="fas fa-lock" style="color:#10b981"></i>
+            <span>Privacy Guaranteed</span>
+        </div>
+        <div class="cf-item">
+            <i class="fas fa-list-check" style="color:#3b82f6"></i>
+            <span>16 Checks</span>
+        </div>
+        <div class="cf-item">
+            <i class="fas fa-gift" style="color:#8b5cf6"></i>
+            <span>100% Free</span>
+        </div>
+    </div>
+
+    <!-- What we check preview -->
+    <div class="container" style="margin-top:4rem">
+        <div class="mini-checklist">
+            <h3 class="mini-checklist-title">Resume Optimization Checklist</h3>
+            <p>We check for 16 crucial things across 5 different categories on your resume including content, file type, and keywords in the most important sections.</p>
+
+            <div class="mini-checks-grid">
+                <div class="mini-check-col">
+                    <div class="mini-check-header"><i class="fas fa-file"></i> Format</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> File format and size</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Resume length</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Long bullet points</div>
+                </div>
+                <div class="mini-check-col">
+                    <div class="mini-check-header"><i class="fas fa-user"></i> Sections</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Contact information</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Essential sections</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Personality showcase</div>
+                </div>
+                <div class="mini-check-col">
+                    <div class="mini-check-header"><i class="fas fa-pen"></i> Content</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Action verbs</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Quantified results</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> ATS parse rate</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Weak phrases</div>
+                </div>
+                <div class="mini-check-col">
+                    <div class="mini-check-header"><i class="fas fa-font"></i> Style</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Email present</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Phone number</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> LinkedIn URL</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/checker.js') }}"></script>
+{% endblock %}

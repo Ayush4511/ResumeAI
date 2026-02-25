@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+{% block title %}ResumeAI - Free ATS Resume Checker{% endblock %}
+
+{% block content %}
+
+<!-- ─── Hero Section ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-bg">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-particles" id="particles"></div>
+    </div>
+
+    <div class="hero-container">
+        <div class="hero-badge">
+            <i class="fas fa-bolt"></i> AI-Powered · Free · Instant Results
+        </div>
+
+        <h1 class="hero-title">
+            Is Your Resume <br>
+            <span class="gradient-text">ATS-Ready?</span>
+        </h1>
+
+        <p class="hero-subtitle">
+            Our AI checks 16 crucial things across 5 categories to ensure your resume
+            gets past Applicant Tracking Systems and lands you interviews.
+        </p>
+
+        <div class="hero-actions">
+            <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
+                <i class="fas fa-upload"></i> Upload My Resume — It's Free
+            </a>
+            <a href="#how-it-works" class="btn-ghost btn-lg smooth-scroll">
+                <i class="fas fa-play-circle"></i> See How It Works
+            </a>
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat-pill">
+                <strong>{{ stats['total'] or '500+' }}</strong>
+                <span>Resumes Analyzed</span>
+            </div>
+            <div class="stat-pill">
+                <strong>16</strong>
+                <span>Checks Performed</span>
+            </div>
+            <div class="stat-pill">
+                <strong>Free</strong>
+                <span>Always & Forever</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Preview Card -->
+    <div class="hero-preview">
+        <div class="preview-card animate-float">
+            <div class="preview-header">
+                <div class="preview-dots">
+                    <span class="dot red"></span>
+                    <span class="dot yellow"></span>
+                    <span class="dot green"></span>
+                </div>
+                <span class="preview-title">Resume Score</span>
+            </div>
+            <div class="preview-score">
+                <div class="score-ring" data-score="87">
+                    <svg viewBox="0 0 120 120">
+                        <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                        <circle class="ring-fill" cx="60" cy="60" r="50"
+                                style="stroke-dashoffset: 85"/>
+                    </svg>
+                    <div class="score-value">87<span>/100</span></div>
+                </div>
+            </div>
+            <div class="preview-bars">
+                <div class="bar-item">
+                    <span>Content</span>
+                    <div class="bar"><div class="bar-fill" style="width:90%;background:#10b981"></div></div>
+                    <span>90%</span>
+                </div>
+                <div class="bar-item">
+                    <span>Format</span>
+                    <div class="bar"><div class="bar-fill" style="width:85%;background:#3b82f6"></div></div>
+                    <span>85%</span>
+                </div>
+                <div class="bar-item">
+                    <span>Keywords</span>
+                    <div class="bar"><div class="bar-fill" style="width:78%;background:#8b5cf6"></div></div>
+                    <span>78%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Trust Logos ─────────────────────────────────────────────────────────── -->
+<section class="trust-section">
+    <p class="trust-label">Trusted by job seekers targeting</p>
+    <div class="trust-logos">
+        <span class="trust-logo">Google</span>
+        <span class="trust-logo">Amazon</span>
+        <span class="trust-logo">Microsoft</span>
+        <span class="trust-logo">Infosys</span>
+        <span class="trust-logo">TCS</span>
+        <span class="trust-logo">Wipro</span>
+    </div>
+</section>
+
+<!-- ─── How It Works ─────────────────────────────────────────────────────────── -->
+<section class="section" id="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">How It Works</div>
+            <h2>Get Results in <span class="gradient-text">3 Simple Steps</span></h2>
+            <p>No signup required. Upload, analyze, improve.</p>
+        </div>
+
+        <div class="steps-grid">
+            <div class="step-card" data-step="1">
+                <div class="step-number">01</div>
+                <div class="step-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                <h3>Upload Resume</h3>
+                <p>Upload your resume in PDF or DOCX format. Max 2MB. Your file is never stored permanently.</p>
+            </div>
+            <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <div class="step-card" data-step="2">
+                <div class="step-number">02</div>
+                <div class="step-icon" style="color:#8b5cf6"><i class="fas fa-brain"></i></div>
+                <h3>AI Analyzes</h3>
+                <p>Our engine runs 16 checks across content, format, style, sections, and keyword density.</p>
+            </div>
+            <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+
+            <div class="step-card" data-step="3">
+                <div class="step-number">03</div>
+                <div class="step-icon" style="color:#10b981"><i class="fas fa-chart-bar"></i></div>
+                <h3>Get Insights</h3>
+                <p>Receive a detailed score, issue list, and actionable suggestions to improve your resume.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Features Section ─────────────────────────────────────────────────────── -->
+<section class="section features-section" id="features">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">Features</div>
+            <h2>Everything You Need to <span class="gradient-text">Stand Out</span></h2>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card featured">
+                <div class="feature-icon"><i class="fas fa-robot"></i></div>
+                <h3>AI-Powered Analysis</h3>
+                <p>Goes beyond grammar. Checks action verbs, quantified results, keyword density, and ATS parse rate.</p>
+                <div class="feature-tag">Core Feature</div>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9)"><i class="fas fa-percentage"></i></div>
+                <h3>ATS Parse Rate</h3>
+                <p>See exactly how much of your resume an ATS bot can read and interpret.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #10b981, #059669)"><i class="fas fa-key"></i></div>
+                <h3>Keyword Detection</h3>
+                <p>Identifies missing technical keywords and soft skills for your industry.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706)"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3>Issue Detection</h3>
+                <p>Finds weak phrases, missing sections, improper formatting, and more.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #ef4444, #dc2626)"><i class="fas fa-lightbulb"></i></div>
+                <h3>Smart Suggestions</h3>
+                <p>Actionable, specific tips to improve every section of your resume.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon" style="background: linear-gradient(135deg, #0ea5e9, #0284c7)"><i class="fas fa-history"></i></div>
+                <h3>Analysis History</h3>
+                <p>Track your improvement over time with saved analysis history.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Score Breakdown ─────────────────────────────────────────────────────── -->
+<section class="section checklist-section">
+    <div class="container">
+        <div class="checklist-inner">
+            <div class="checklist-content">
+                <div class="section-badge">What We Check</div>
+                <h2>16 Crucial Checks Across <span class="gradient-text">5 Categories</span></h2>
+                <p>Our AI resume checker goes beyond typos and punctuation to evaluate everything that matters to ATS systems and recruiters.</p>
+
+                <div class="checklist-items">
+                    <div class="check-category">
+                        <div class="cat-header">
+                            <i class="fas fa-file-alt"></i>
+                            <strong>Format & Brevity</strong>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> File format & size</li>
+                            <li><i class="fas fa-check"></i> Resume length</li>
+                            <li><i class="fas fa-check"></i> Bullet point length</li>
+                        </ul>
+                    </div>
+
+                    <div class="check-category">
+                        <div class="cat-header">
+                            <i class="fas fa-pen-fancy"></i>
+                            <strong>Content Quality</strong>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Action verbs</li>
+                            <li><i class="fas fa-check"></i> Quantified achievements</li>
+                            <li><i class="fas fa-check"></i> Weak phrase detection</li>
+                            <li><i class="fas fa-check"></i> ATS parse rate</li>
+                        </ul>
+                    </div>
+
+                    <div class="check-category">
+                        <div class="cat-header">
+                            <i class="fas fa-user"></i>
+                            <strong>Sections</strong>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Contact information</li>
+                            <li><i class="fas fa-check"></i> Essential sections</li>
+                            <li><i class="fas fa-check"></i> Section completeness</li>
+                        </ul>
+                    </div>
+
+                    <div class="check-category">
+                        <div class="cat-header">
+                            <i class="fas fa-tags"></i>
+                            <strong>Keywords & Skills</strong>
+                        </div>
+                        <ul>
+                            <li><i class="fas fa-check"></i> Technical keywords</li>
+                            <li><i class="fas fa-check"></i> Soft skills presence</li>
+                            <li><i class="fas fa-check"></i> Industry relevance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('check') }}" class="btn-primary">
+                    <i class="fas fa-rocket"></i> Get My Score Now
+                </a>
+            </div>
+
+            <div class="checklist-visual">
+                <div class="score-display-card">
+                    <div class="sdc-title">Resume Optimization Score</div>
+                    <div class="sdc-categories">
+                        <div class="sdc-row">
+                            <span>Content</span>
+                            <div class="sdc-bar"><div class="sdc-fill" style="width:90%;--c:#10b981"></div></div>
+                            <span class="sdc-pct green">90%</span>
+                        </div>
+                        <div class="sdc-row">
+                            <span>Format</span>
+                            <div class="sdc-bar"><div class="sdc-fill" style="width:84%;--c:#3b82f6"></div></div>
+                            <span class="sdc-pct blue">84%</span>
+                        </div>
+                        <div class="sdc-row">
+                            <span>Style</span>
+                            <div class="sdc-bar"><div class="sdc-fill" style="width:40%;--c:#f59e0b"></div></div>
+                            <span class="sdc-pct yellow">40%</span>
+                        </div>
+                        <div class="sdc-row">
+                            <span>Sections</span>
+                            <div class="sdc-bar"><div class="sdc-fill" style="width:40%;--c:#ef4444"></div></div>
+                            <span class="sdc-pct red">40%</span>
+                        </div>
+                        <div class="sdc-row">
+                            <span>Skills</span>
+                            <div class="sdc-bar"><div class="sdc-fill" style="width:68%;--c:#8b5cf6"></div></div>
+                            <span class="sdc-pct purple">68%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Testimonials ─────────────────────────────────────────────────────────── -->
+<section class="section testimonials-section" id="testimonials">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">Testimonials</div>
+            <h2>Loved by <span class="gradient-text">Job Seekers</span></h2>
+        </div>
+
+        <div class="testimonials-grid">
+            {% for t in testimonials %}
+            <div class="testimonial-card">
+                <div class="testimonial-rating">
+                    {% for i in range(t['rating']) %}
+                    <i class="fas fa-star"></i>
+                    {% endfor %}
+                </div>
+                <p class="testimonial-text">"{{ t['comment'] }}"</p>
+                <div class="testimonial-author">
+                    <div class="author-avatar">{{ t['name'][0] }}</div>
+                    <div class="author-info">
+                        <strong>{{ t['name'] }}</strong>
+                        <span>{{ t['role'] }} @ {{ t['company'] }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- ─── FAQ Section ─────────────────────────────────────────────────────────── -->
+<section class="section faq-section" id="faq">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">FAQ</div>
+            <h2>Frequently Asked <span class="gradient-text">Questions</span></h2>
+        </div>
+
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is ResumeAI completely free?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Yes! ResumeAI is 100% free. Upload as many resumes as you want with no limits, no signup required.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is my resume data safe?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely. Your resume file is analyzed and immediately deleted. We only store anonymized scores in our database, never your personal file content.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    What file formats are supported?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>We support PDF and DOCX formats up to 2MB. PDF is recommended for better ATS compatibility.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    How is the ATS score calculated?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>The score is a weighted average across 5 categories: Content (30%), Sections (20%), Format (20%), Style (15%), and Skills (15%). Each category checks for specific ATS-critical factors.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    What score should I aim for?
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="faq-answer">
+                    <p>Aim for 80+ for good ATS compatibility. Scores above 85 are considered excellent. Below 60 means significant improvements are needed.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── CTA Section ─────────────────────────────────────────────────────────── -->
+<section class="cta-section">
+    <div class="container">
+        <div class="cta-inner">
+            <h2>Ready to Land More Interviews?</h2>
+            <p>Join thousands of job seekers who improved their resumes with ResumeAI</p>
+            <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
+                <i class="fas fa-upload"></i> Check My Resume for Free
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Animate elements on scroll
+const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.classList.add('animate-in');
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.feature-card, .step-card, .testimonial-card, .faq-item').forEach(el => {
+    observer.observe(el);
+});
+
+// Animate bar fills on scroll
+const barObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.sdc-fill, .bar-fill').forEach(bar => {
+                bar.style.transition = 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        }
+    });
+});
+document.querySelectorAll('.sdc-categories, .preview-bars').forEach(el => barObserver.observe(el));
+</script>
+{% endblock %}
