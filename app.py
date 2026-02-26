@@ -12,6 +12,22 @@ from datetime import datetime
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from werkzeug.utils import secure_filename
 
+# NLP libraries for enhanced keyword extraction and similarity
+try:
+    import nltk
+    from nltk.corpus import stopwords
+    from nltk.tokenize import word_tokenize
+    from nltk import pos_tag
+except ImportError:
+    nltk = None  # will handle gracefully later
+
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    TfidfVectorizer = None
+    cosine_similarity = None
+
 # ─── App Configuration ────────────────────────────────────────────────────────
 app = Flask(__name__)
 app.secret_key = "ats_resume_secret_key_2024"
@@ -56,6 +72,8 @@ def init_db():
             issues_found INTEGER DEFAULT 0,
             word_count INTEGER DEFAULT 0,
             analysis_json TEXT,
+            job_description TEXT,
+            similarity_score REAL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -69,6 +87,15 @@ def init_db():
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
     """)
+    # attempt to add new columns for older databases
+    try:
+        cursor.execute("ALTER TABLE analyses ADD COLUMN job_description TEXT")
+    except sqlite3.OperationalError:
+        pass
+    try:
+        cursor.execute("ALTER TABLE analyses ADD COLUMN similarity_score REAL")
+    except sqlite3.OperationalError:
+        pass
 
     # Seed testimonials if empty
     cursor.execute("SELECT COUNT(*) FROM testimonials")
@@ -162,7 +189,65 @@ def extract_text_from_file(filepath):
     return text.lower()
 
 
-def analyze_resume(text, filename):
+def extract_keywords(text, top_n=20):
+    """Return a list of high-frequency keywords (nouns/adjectives) using NLTK.
+    Falls back to simple splitting if NLTK isn't available. """
+    if not text:
+        return []
+
+    # ensure NLTK data is available
+    if nltk:
+        try:
+            nltk.data.find('tokenizers/punkt')
+        except LookupError:
+            nltk.download('punkt', quiet=True)
+        try:
+            nltk.data.find('corpora/stopwords')
+        except LookupError:
+            nltk.download('stopwords', quiet=True)
+        try:
+            nltk.data.find('taggers/averaged_perceptron_tagger')
+        except LookupError:
+            nltk.download('averaged_perceptron_tagger', quiet=True)
+
+        tokens = word_tokenize(text)
+        words = [w.lower() for w in tokens if w.isalpha()]
+        sw = set(stopwords.words('english'))
+        filtered = [w for w in words if w not in sw]
+        tagged = pos_tag(filtered)
+        keywords = [w for w, pos in tagged if pos.startswith('NN') or pos.startswith('JJ')]
+        freq = {}
+        for w in keywords:
+            freq[w] = freq.get(w, 0) + 1
+        sorted_kw = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+        return [w for w, _ in sorted_kw[:top_n]]
+    else:
+        # fallback: simple word frequency ignoring stopwords
+        words = re.findall(r"\b[a-zA-Z]{3,}\b", text.lower())
+        freq = {}
+        for w in words:
+            freq[w] = freq.get(w, 0) + 1
+        sorted_kw = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+        return [w for w, _ in sorted_kw[:top_n]]
+
+
+def compute_similarity(doc1, doc2):
+    """Return a cosine similarity between two documents (0-1)."""
+    if not doc1 or not doc2:
+        return 0.0
+    if TfidfVectorizer and cosine_similarity:
+        try:
+            vect = TfidfVectorizer().fit_transform([doc1, doc2])
+            sim = cosine_similarity(vect[0:1], vect[1:2])[0][0]
+            return float(sim)
+        except Exception:
+            pass
+    # fallback to simple ratio
+    from difflib import SequenceMatcher
+    return SequenceMatcher(None, doc1, doc2).ratio()
+
+
+def analyze_resume(text, filename, job_desc=None):
     """
     Core ATS analysis engine.
     Returns a comprehensive analysis dict with scores and feedback.
@@ -171,6 +256,9 @@ def analyze_resume(text, filename):
     word_count = len(words)
     issues = []
     suggestions = []
+
+    # keywords extracted from resume (later used for job matching)
+    resume_keywords = extract_keywords(text)
 
     # ── 1. ATS Parse Rate ─────────────────────────────────────────────────────
     # Simulates how much content an ATS can parse
@@ -278,6 +366,22 @@ def analyze_resume(text, filename):
         issues.append("Few technical keywords detected - tailor to job description")
         suggestions.append("Add relevant technical skills matching your target role's requirements")
 
+    # ── Job description matching (optional) ──────────────────────────────────
+    job_score = None
+    job_keywords = []
+    job_missing = []
+    if job_desc:
+        jd = job_desc.lower()
+        job_keywords = extract_keywords(jd)
+        job_score = int(compute_similarity(text, jd) * 100)
+        if job_score < 50:
+            suggestions.append("Consider tailoring your resume more closely to the pasted job description.")
+        # compute missing keywords
+        job_missing = [kw for kw in job_keywords if kw not in resume_keywords]
+        if job_missing:
+            issues.append(f"Resume missing {len(job_missing)} keywords from job description.")
+            suggestions.append("Add keywords such as: " + ", ".join(job_missing[:10]))
+    
     # ── Calculate Overall Score ───────────────────────────────────────────────
     weights = {
         "content": 0.30,
@@ -309,7 +413,7 @@ def analyze_resume(text, filename):
         grade = "Needs Work"
         grade_color = "#ef4444"
 
-    return {
+    result = {
         "overall_score": overall_score,
         "grade": grade,
         "grade_color": grade_color,
@@ -333,6 +437,12 @@ def analyze_resume(text, filename):
         "quantified_achievements": quantified,
         "sections_found": found_sections,
     }
+    if job_desc:
+        result["job_description"] = job_desc
+        result["job_match_score"] = job_score
+        result["job_keywords"] = job_keywords
+        result["job_keywords_missing"] = job_missing
+    return result
 
 
 # ─── Helper Functions ─────────────────────────────────────────────────────────
@@ -341,19 +451,21 @@ def allowed_file(filename):
     return "." in filename and filename.rsplit(".", 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-def save_analysis(filename, result):
+def save_analysis(filename, result, job_description=None):
     """Save analysis result to database."""
     conn = get_db()
     conn.execute("""
         INSERT INTO analyses
         (filename, overall_score, ats_parse_rate, content_score, format_score,
-         style_score, sections_score, skills_score, issues_found, word_count, analysis_json)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         style_score, sections_score, skills_score, issues_found, word_count, analysis_json,
+         job_description, similarity_score)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         filename, result["overall_score"], result["ats_parse_rate"],
         result["content_score"], result["format_score"], result["style_score"],
         result["sections_score"], result["skills_score"], result["issues_found"],
-        result["word_count"], json.dumps(result)
+        result["word_count"], json.dumps(result), job_description,
+        result.get("job_match_score")
     ))
     conn.commit()
     last_id = conn.execute("SELECT last_insert_rowid()").fetchone()[0]
@@ -428,8 +540,10 @@ def upload():
         summary results-driven software engineer with 5 years experience
         """
 
-    result = analyze_resume(text, filename)
-    analysis_id = save_analysis(filename, result)
+    # grab optional job description from form
+    job_desc = request.form.get("job_desc", "").strip()
+    result = analyze_resume(text, filename, job_desc if job_desc else None)
+    analysis_id = save_analysis(filename, result, job_desc if job_desc else None)
 
     # Clean up file after analysis
     try:
@@ -477,7 +591,9 @@ def api_stats():
             COUNT(*) as total_analyses,
             ROUND(AVG(overall_score), 1) as avg_score,
             COUNT(CASE WHEN overall_score >= 80 THEN 1 END) as high_score_count,
-            COUNT(CASE WHEN overall_score < 60 THEN 1 END) as low_score_count
+            COUNT(CASE WHEN overall_score < 60 THEN 1 END) as low_score_count,
+            ROUND(AVG(similarity_score), 1) as avg_job_match,
+            COUNT(similarity_score) as analyses_with_job_desc
         FROM analyses
     """).fetchone()
     conn.close()

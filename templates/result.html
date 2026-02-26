@@ -30,6 +30,12 @@
                 <div class="meta-pill"><i class="fas fa-file-word"></i> {{ analysis.word_count }} Words</div>
                 <div class="meta-pill"><i class="fas fa-clock"></i> Analyzed just now</div>
             </div>
+            {% if analysis.job_description %}
+            <div class="result-job-desc" style="background:#f9f9f9;color:var(--text);padding:1rem;margin-top:1rem;border-radius:6px;font-size:0.9rem;white-space:pre-wrap;">
+                <strong>Job Description Provided:</strong>
+                <div>{{ analysis.job_description }}</div>
+            </div>
+            {% endif %}
         </div>
     </div>
 
@@ -181,6 +187,23 @@
                         Add more industry-specific keywords to improve your score.
                         {% endif %}
                     </p>
+                </div>
+                {% endif %}
+
+                <!-- Job Description Matching -->
+                {% if analysis.job_match_score is defined %}
+                <div class="result-card">
+                    <div class="card-header">
+                        <h2><i class="fas fa-clipboard-check"></i> Job Description Match</h2>
+                    </div>
+                    <p>
+                        Similarity with provided job description: <strong>{{ analysis.job_match_score }}%</strong>
+                    </p>
+                    {% if analysis.job_keywords_missing %}
+                    <p style="color:var(--text-secondary);font-size:0.9rem;">
+                        Consider adding keywords: {{ analysis.job_keywords_missing|join(', ') }}
+                    </p>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>
