@@ -96,6 +96,11 @@ function uploadResume(file) {
 
     const formData = new FormData();
     formData.append('resume', file);
+    // include optional job description
+    const jobDescEl = document.getElementById('jobDesc');
+    if (jobDescEl && jobDescEl.value.trim()) {
+        formData.append('job_desc', jobDescEl.value.trim());
+    }
 
     fetch('/upload', {
         method: 'POST',

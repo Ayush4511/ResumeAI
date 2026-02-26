@@ -11,6 +11,11 @@
 
     <!-- Upload Area -->
     <div class="checker-container">
+        <!-- Job description input (optional) -->
+        <div class="job-desc-box" style="margin-bottom:1.5rem;">
+            <label for="jobDesc" style="font-weight:600;display:block;">Paste Job Description (optional)</label>
+            <textarea id="jobDesc" rows="4" placeholder="Copy &amp; paste the full job description here to get matching insights" style="width:100%;padding:0.5rem;border:1px solid #ccc;border-radius:4px;"></textarea>
+        </div>
         <div class="upload-box" id="uploadBox">
             <div class="upload-idle" id="uploadIdle">
                 <div class="upload-icon-wrap">
@@ -127,6 +132,7 @@
                     <div class="mini-check-item"><i class="fas fa-check"></i> Quantified results</div>
                     <div class="mini-check-item"><i class="fas fa-check"></i> ATS parse rate</div>
                     <div class="mini-check-item"><i class="fas fa-check"></i> Weak phrases</div>
+                    <div class="mini-check-item"><i class="fas fa-check"></i> Job description relevance (if provided)</div>
                 </div>
                 <div class="mini-check-col">
                     <div class="mini-check-header"><i class="fas fa-font"></i> Style</div>

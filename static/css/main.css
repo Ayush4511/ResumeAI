@@ -938,14 +938,21 @@ h3 { font-size: 1.25rem; font-weight: 600; }
 .history-table { width: 100%; border-collapse: collapse; }
 .history-table th {
   background: var(--bg-2); padding: 1rem 1.25rem;
-  text-align: left; font-size: 0.8rem; font-weight: 600;
+  text-align: center; font-size: 0.8rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.05em;
-  color: var(--text-secondary); border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
 }
 .history-table td {
-  padding: 1rem 1.25rem; border-bottom: 1px solid var(--border);
-  font-size: 0.9rem;
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem; text-align: center;
 }
+/* filename column remains left-aligned */
+.history-table .col-filename,
+.history-table .filename-cell { text-align: left; }
+
+/* row borders instead of cell borders for clean lines */
+.history-table tbody tr { border-bottom: 1px solid var(--border); }
+.history-table tbody tr:last-child { border-bottom: none; }
 .history-table tr:last-child td { border-bottom: none; }
 .history-table tr:hover td { background: var(--bg-2); }
 .filename-cell { display: flex; align-items: center; gap: 0.5rem; }
