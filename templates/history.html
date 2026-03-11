@@ -36,8 +36,9 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Filename</th>
+                        <th class="col-filename">Filename</th>
                         <th>Score</th>
+                        <th>Job Match</th>
                         <th>Issues</th>
                         <th>Words</th>
                         <th>Date</th>
@@ -59,6 +60,12 @@
                                 {% else %}score-bad{% endif %}">
                                 {{ row['overall_score'] }}/100
                             </span>
+                        </td>
+                        <td>
+                            {% if row['similarity_score'] is not none %}
+                            {{ row['similarity_score']|round|int }}%
+                            {% else %}-
+                            {% endif %}
                         </td>
                         <td>{{ row['issues_found'] }} issues</td>
                         <td>{{ row['word_count'] }} words</td>
