@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Login - ResumeAI{% endblock %}
+
+{% block extra_css %}
+<style>
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1.5rem 3rem;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+}
+.auth-page::before {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(109,40,217,0.08), transparent);
+    border-radius: 50%;
+    top: -100px; right: -100px;
+    pointer-events: none;
+}
+.auth-page::after {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(16,185,129,0.06), transparent);
+    border-radius: 50%;
+    bottom: -80px; left: -80px;
+    pointer-events: none;
+}
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+    position: relative;
+    z-index: 1;
+}
+.auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
+    border-radius: 20px 20px 0 0;
+}
+.auth-icon {
+    width: 64px; height: 64px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.25rem;
+    color: white;
+    font-size: 1.5rem;
+}
+.auth-card h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+}
+.auth-subtitle {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+.auth-error {
+    background: rgba(239,68,68,0.08);
+    color: #dc2626;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border: 1px solid rgba(239,68,68,0.15);
+}
+.auth-field {
+    margin-bottom: 1.25rem;
+}
+.auth-field label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+.auth-field input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-2);
+    color: var(--text);
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+.auth-field input:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(109,40,217,0.1);
+}
+.auth-submit {
+    width: 100%;
+    padding: 0.85rem;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+}
+.auth-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(109,40,217,0.3);
+}
+.auth-divider {
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 0;
+}
+.auth-divider::before, .auth-divider::after {
+    content: '';
+    flex: 1;
+    border-top: 1px solid var(--border);
+}
+.auth-divider span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin: 0 1rem;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.auth-google {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s, border-color 0.2s;
+    gap: 0.6rem;
+}
+.auth-google:hover {
+    background: var(--bg-2);
+    border-color: var(--primary-light);
+}
+.auth-footer {
+    text-align: center;
+    margin-top: 1.75rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+.auth-footer a {
+    color: var(--primary-light);
+    text-decoration: none;
+    font-weight: 700;
+}
+.auth-footer a:hover { text-decoration: underline; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-icon">
+            <i class="fas fa-sign-in-alt"></i>
+        </div>
+        <h2>Welcome Back</h2>
+        <p class="auth-subtitle">Sign in to access your resume dashboard</p>
+
+        {% if error %}
+        <div class="auth-error">
+            <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="auth-field">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
+            <div class="auth-field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="auth-submit">
+                <i class="fas fa-arrow-right"></i> Sign In
+            </button>
+
+            <div class="auth-divider"><span>or</span></div>
+
+            <a href="{{ url_for('login_google') }}" class="auth-google">
+                <img src="https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg" alt="Google" style="width:20px;height:20px;">
+                Sign in with Google
+            </a>
+        </form>
+
+        <div class="auth-footer">
+            Don't have an account? <a href="{{ url_for('register') }}">Create one</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

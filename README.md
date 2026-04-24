@@ -20,22 +20,30 @@ It generates actionable suggestions to improve selection chances in product-base
 - HTML5
 - CSS3
 - JavaScript
+- Jinja2 Templates
 
 ### Backend
-- Flask / .NET (C#)
+- Python
+- Flask
+
+### AI & Analysis
+- Google Gemini 2.0 Flash (`google-genai`)
+- NLTK (Natural Language Toolkit)
+- Scikit-learn (TF-IDF Similarity)
 
 ### Database
-- SQLite / MySQL
+- SQLite
 
 ---
 
 ## ✨ Features
 
 ✔ Resume Score Calculation  
-✔ Skill Extraction & Matching  
-✔ ATS Compatibility Check  
-✔ Improvement Suggestions  
+✔ AI-Powered Resume Coaching  
+✔ Skill Extraction & Job Matching  
+✔ ATS Compatibility Check
 ✔ Clean & Responsive UI  
+✔ User Accounts & History Tracking
 
 ---
 
@@ -47,28 +55,22 @@ git clone https://github.com/Ayush4511/ResumeAI.git
 cd ResumeAI
 ```
 
-### 2️⃣ Install Dependencies
+### 2️⃣ Setup Environment and Keys
+Create a `.env` file in the root directory and add your API keys:
+```env
+GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_CLIENT_ID=your_google_oauth_client_id
+GOOGLE_CLIENT_SECRET=your_google_oauth_client_secret
+```
 
-If using Python:
+### 3️⃣ Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-If using .NET:
+### 4️⃣ Run the Application
 ```bash
-dotnet restore
-```
-
-### 3️⃣ Run the Application
-
-Python:
-```bash
-python app.py
-```
-
-.NET:
-```bash
-dotnet run
+python -m flask run
 ```
 
 ---

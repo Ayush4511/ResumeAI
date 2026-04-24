@@ -1,0 +1,428 @@
+{% extends "base.html" %}
+{% block title %}My Resume - ResumeAI{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/templates.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+    .my-resume-page {
+        min-height: calc(100vh - 70px);
+        padding-top: 90px;
+        padding-bottom: 4rem;
+        background: var(--bg-2);
+    }
+    .page-wrap {
+        max-width: 920px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+
+    /* ── Account Card ─────────────────────────────────────── */
+    .account-card {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        padding: 1.25rem 1.5rem;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,.06);
+    }
+    .account-avatar {
+        width: 56px; height: 56px;
+        border-radius: 50%;
+        background: linear-gradient(135deg,#6366f1,#8b5cf6);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.5rem; color: #fff; font-weight: 800;
+        flex-shrink: 0;
+    }
+    .account-info { flex: 1; }
+    .account-info strong { font-size: 1.05rem; color: var(--text); }
+    .account-info p { font-size: 0.83rem; color: var(--text-muted); margin: 2px 0 0; }
+    .account-badge {
+        display: inline-flex; align-items: center; gap: .4rem;
+        background: rgba(99,102,241,.12); color: #6366f1;
+        border-radius: 20px; padding: .25rem .75rem;
+        font-size: .78rem; font-weight: 700;
+    }
+
+    /* ── Section Title ────────────────────────────────────── */
+    .section-heading {
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 .85rem;
+        display: flex; align-items: center; gap: .5rem;
+    }
+    .section-heading i { color: #6366f1; }
+
+    /* ── Upload History ───────────────────────────────────── */
+    .history-section { margin-bottom: 2.5rem; }
+    .history-table-wrap {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0,0,0,.05);
+    }
+    .history-table {
+        width: 100%; border-collapse: collapse;
+        font-size: 0.87rem;
+    }
+    .history-table th {
+        background: rgba(99,102,241,.07);
+        color: var(--text-muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: .75rem;
+        letter-spacing: .04em;
+        padding: .75rem 1.1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+    }
+    .history-table td {
+        padding: .8rem 1.1rem;
+        color: var(--text);
+        border-bottom: 1px solid var(--border);
+    }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: rgba(99,102,241,.04); }
+    .score-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 42px; height: 42px;
+        border-radius: 50%;
+        font-weight: 800; font-size: .9rem;
+        color: #fff;
+    }
+    .score-high { background: linear-gradient(135deg,#10b981,#059669); }
+    .score-mid  { background: linear-gradient(135deg,#f59e0b,#d97706); }
+    .score-low  { background: linear-gradient(135deg,#ef4444,#dc2626); }
+    .btn-view-result {
+        display: inline-flex; align-items: center; gap: .35rem;
+        padding: .35rem .9rem;
+        background: rgba(99,102,241,.1);
+        color: #6366f1; border: none;
+        border-radius: 8px; font-weight: 700;
+        font-size: .8rem; cursor: pointer;
+        text-decoration: none;
+        transition: background .15s;
+    }
+    .btn-view-result:hover { background: rgba(99,102,241,.2); }
+    .empty-history {
+        text-align: center; padding: 2.5rem 1rem;
+        color: var(--text-muted); font-size: .9rem;
+    }
+    .empty-history i { font-size: 2rem; margin-bottom: .5rem; color: var(--border); display: block; }
+
+    /* ── My Resume topbar ─────────────────────────────────── */
+    .my-resume-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    .my-resume-topbar h2 { font-size: 1.05rem; font-weight: 700; color: var(--text); margin: 0; }
+    .my-resume-topbar p { font-size: 0.83rem; color: var(--text-muted); margin: 2px 0 0; }
+    .resume-actions { display: flex; gap: .75rem; flex-wrap: wrap; align-items: center; }
+    .btn-edit-resume {
+        display: inline-flex; align-items: center; gap: .5rem;
+        padding: .55rem 1.1rem; background: var(--primary);
+        color: #fff; border: none; border-radius: 10px;
+        font-weight: 700; font-size: .85rem; cursor: pointer;
+        text-decoration: none; transition: transform .15s, box-shadow .2s;
+    }
+    .btn-edit-resume:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(109,40,217,.35); }
+    .btn-download-resume {
+        display: inline-flex; align-items: center; gap: .5rem;
+        padding: .55rem 1.1rem; background: #10b981;
+        color: #fff; border: none; border-radius: 10px;
+        font-weight: 700; font-size: .85rem; cursor: pointer;
+        transition: transform .15s, box-shadow .2s;
+    }
+    .btn-download-resume:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(16,185,129,.35); }
+
+    /* ── Resume Paper ─────────────────────────────────────── */
+    .resume-paper-wrap { margin-bottom: 2.5rem; }
+    #my-resume-preview {
+        background: white;
+        width: 100%; max-width: 210mm;
+        margin: 0 auto; min-height: 180mm;
+        box-shadow: 0 25px 80px rgba(0,0,0,.12), 0 0 0 1px rgba(0,0,0,.04);
+        padding: 20mm; box-sizing: border-box; border-radius: 2px;
+    }
+
+    /* ── Empty state ──────────────────────────────────────── */
+    .empty-state {
+        max-width: 480px; margin: 2rem auto;
+        text-align: center; padding: 3rem 2rem;
+        background: var(--bg); border-radius: 20px;
+        border: 2px dashed var(--border);
+    }
+    .empty-state .empty-icon {
+        width: 80px; height: 80px;
+        background: linear-gradient(135deg,#6366f1,#8b5cf6);
+        border-radius: 18px;
+        display: flex; align-items: center; justify-content: center;
+        margin: 0 auto 1.25rem; font-size: 2rem; color: #fff;
+    }
+    .empty-state h2 { font-size: 1.4rem; margin-bottom: .5rem; color: var(--text); }
+    .empty-state p { color: var(--text-muted); margin-bottom: 1.5rem; }
+
+    /* ── Auth Banner ──────────────────────────────────────── */
+    .auth-banner {
+        padding: .9rem 1.25rem;
+        background: linear-gradient(135deg,rgba(99,102,241,.08),rgba(139,92,246,.06));
+        border: 1px solid rgba(99,102,241,.2);
+        border-radius: 12px; margin-bottom: 1.5rem;
+        display: flex; align-items: center; gap: .85rem;
+        font-size: .88rem; color: var(--text);
+    }
+    .auth-banner i { color: #8b5cf6; }
+    .auth-banner a { color: #6366f1; font-weight: 700; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="my-resume-page">
+<div class="page-wrap">
+
+    <!-- ── Account Info Banner ────────────────────────────── -->
+    {% if is_logged_in %}
+    <div class="account-card">
+        <div class="account-avatar">{{ (username or 'U')[0] | upper }}</div>
+        <div class="account-info">
+            <strong>{{ username }}</strong>
+            <p>Logged in &nbsp;·&nbsp; Your data is saved to your account</p>
+        </div>
+        <span class="account-badge"><i class="fas fa-shield-alt"></i> Verified</span>
+    </div>
+    {% else %}
+    <div class="auth-banner">
+        <i class="fas fa-info-circle fa-lg"></i>
+        <span>You're browsing as a <strong>guest</strong>. <a href="{{ url_for('login') }}">Login</a> or <a href="{{ url_for('register') }}">Register</a> to save your resumes permanently.</span>
+    </div>
+    {% endif %}
+
+    <!-- ── Upload History ─────────────────────────────────── -->
+    <div class="history-section">
+        <p class="section-heading"><i class="fas fa-chart-bar"></i> ATS Analysis History</p>
+        <div class="history-table-wrap">
+            {% if history_rows %}
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Score</th>
+                        <th>File</th>
+                        <th>ATS Rate</th>
+                        <th>Skills</th>
+                        <th>Date</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in history_rows %}
+                <tr>
+                    <td>
+                        <span class="score-badge {% if row.overall_score >= 80 %}score-high{% elif row.overall_score >= 60 %}score-mid{% else %}score-low{% endif %}">
+                            {{ row.overall_score }}
+                        </span>
+                    </td>
+                    <td>
+                        <span style="font-weight:600;">{{ row.filename }}</span>
+                    </td>
+                    <td>{{ row.ats_parse_rate }}%</td>
+                    <td>{{ row.skills_score }}%</td>
+                    <td style="color:var(--text-muted);font-size:.82rem;">{{ row.created_at[:10] }}</td>
+                    <td>
+                        <a href="{{ url_for('result', analysis_id=row.id) }}" class="btn-view-result">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="empty-history">
+                <i class="fas fa-file-search"></i>
+                {% if is_logged_in %}
+                No ATS checks yet. <a href="{{ url_for('check') }}" style="color:#6366f1;font-weight:700;">Analyze a resume</a> to see results here.
+                {% else %}
+                Login to see your analysis history.
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ── My Resume Preview ──────────────────────────────── -->
+    <div class="my-resume-topbar">
+        <div>
+            <p class="section-heading" style="margin-bottom:2px;"><i class="fas fa-id-card"></i> My Resume</p>
+            <p style="font-size:.83rem;color:var(--text-muted);margin:0;">Your saved resume in the Premium Photo template</p>
+        </div>
+        <div class="resume-actions">
+            <a href="{{ url_for('builder') }}" class="btn-edit-resume">
+                <i class="fas fa-pen"></i> Edit Resume
+            </a>
+            <button class="btn-download-resume" onclick="downloadMyResume()">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+        </div>
+    </div>
+
+    <div class="resume-paper-wrap">
+        {% set rd = resume_data or session_parsed %}
+
+        {% if rd %}
+        <div id="my-resume-preview" class="template-{{ template_id }}">
+
+            {% if template_id == 'photo' %}
+            <div class="cv-header">
+                <div class="cv-photo-wrap">
+                    {% if rd.get('photo_url') %}
+                    <img src="{{ rd.photo_url }}" alt="Profile Photo">
+                    {% else %}
+                    <div class="photo-placeholder"><i class="fas fa-user fa-2x" style="color:#cbd5e1;display:block;margin-bottom:4px;"></i>Add Photo<br>in Builder</div>
+                    {% endif %}
+                </div>
+                <div class="cv-header-info">
+                    <h1>{{ rd.get('name', 'Your Name') | upper }}</h1>
+                    <table class="cv-contact-table">
+                        {% if rd.get('location') %}<tr><td>Address:</td><td>{{ rd.location }}</td></tr>{% endif %}
+                        {% if rd.get('phone') %}<tr><td>Phone:</td><td>{{ rd.phone }}</td></tr>{% endif %}
+                        {% if rd.get('email') %}<tr><td>Email:</td><td>{{ rd.email }}</td></tr>{% endif %}
+                        {% if rd.get('linkedin') %}<tr><td>Website:</td><td>{{ rd.linkedin }}</td></tr>{% elif rd.get('website') %}<tr><td>Website:</td><td>{{ rd.website }}</td></tr>{% endif %}
+                    </table>
+                </div>
+            </div>
+
+            {% if rd.get('summary') %}
+            <div class="cv-section">
+                <h4 class="cv-section-title">Summary</h4>
+                <p class="cv-text">{{ rd.summary }}</p>
+            </div>
+            {% endif %}
+
+            {% if rd.get('experience') and rd.experience %}
+            <div class="cv-section">
+                <h4 class="cv-section-title">Work Experience</h4>
+                {% for exp in rd.experience %}
+                <div class="list-item">
+                    <div class="list-header" style="display:flex;justify-content:space-between;">
+                        <span><strong>{{ exp.get('role','') }}</strong>{% if exp.get('company') %}, <span class="list-company">{{ exp.company }}</span>{% endif %}</span>
+                        <span class="list-date">{{ exp.get('duration','') }}</span>
+                    </div>
+                    {% if exp.get('description') %}
+                    <ul class="list-bullets">
+                        {% for line in exp.description.split('\n') %}{% if line.strip() %}<li>{{ line.strip().lstrip('•-').strip() }}</li>{% endif %}{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if rd.get('education') and rd.education %}
+            <div class="cv-section">
+                <h4 class="cv-section-title">Education</h4>
+                {% for edu in rd.education %}
+                <div class="list-item">
+                    <div class="list-header" style="display:flex;justify-content:space-between;">
+                        <span class="edu-degree">{{ edu.get('degree','') }}</span>
+                        <span class="list-date">{{ edu.get('duration','') }}</span>
+                    </div>
+                    {% if edu.get('school') %}<div class="edu-school">{{ edu.school }}</div>{% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% if rd.get('skills') or rd.get('certifications') or rd.get('languages') %}
+            <div class="cv-section">
+                <h4 class="cv-section-title">Additional Information</h4>
+                {% if rd.get('skills') %}<div class="skills-group"><strong>Technical Skills:</strong> {{ rd.skills }}</div>{% endif %}
+                {% if rd.get('certifications') %}<div class="skills-group"><strong>Certifications:</strong> {{ rd.certifications }}</div>{% endif %}
+                {% if rd.get('languages') %}<div class="skills-group"><strong>Languages:</strong> {{ rd.languages }}</div>{% endif %}
+                {% if rd.get('awards') %}<div class="skills-group"><strong>Awards:</strong> {{ rd.awards }}</div>{% endif %}
+            </div>
+            {% endif %}
+
+            {% if rd.get('projects') and rd.projects %}
+            <div class="cv-section">
+                <h4 class="cv-section-title">Projects</h4>
+                {% for proj in rd.projects %}
+                <div class="list-item">
+                    <div class="list-header"><strong>{{ proj.get('name', '') }}</strong></div>
+                    {% if proj.get('description') %}
+                    <ul class="list-bullets">
+                        {% for line in proj.description.split('\n') %}{% if line.strip() %}<li>{{ line.strip().lstrip('•-').strip() }}</li>{% endif %}{% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% else %}
+            {# Standard templates #}
+            <div class="cv-header">
+                <h1>{{ rd.get('name','Your Name') }}</h1>
+                <h3>{{ rd.get('title','Job Title') }}</h3>
+                <div class="cv-contact">
+                    <span>{{ rd.get('email','') }}</span>
+                    {% if rd.get('phone') %} <span class="sep">•</span><span>{{ rd.phone }}</span>{% endif %}
+                    {% if rd.get('location') %} <span class="sep">•</span><span>{{ rd.location }}</span>{% endif %}
+                </div>
+            </div>
+            {% if rd.get('summary') %}
+            <div class="cv-section"><h4 class="cv-section-title">Summary</h4><p class="cv-text">{{ rd.summary }}</p></div>
+            {% endif %}
+            {% if rd.get('skills') %}
+            <div class="cv-section"><h4 class="cv-section-title">Skills</h4><p class="cv-text">{{ rd.skills }}</p></div>
+            {% endif %}
+            {% endif %}
+
+        </div>
+
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-file-plus"></i></div>
+            <h2>No Resume Yet</h2>
+            <p>Upload your existing resume to auto-fill the builder, or start from scratch.</p>
+            <div style="display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;">
+                <a href="{{ url_for('check') }}" class="btn-edit-resume" style="text-decoration:none;">
+                    <i class="fas fa-upload"></i> Upload &amp; Parse Resume
+                </a>
+                <a href="{{ url_for('builder') }}" style="display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;background:var(--bg-2);border:1px solid var(--border);border-radius:10px;font-weight:700;font-size:.85rem;color:var(--text);text-decoration:none;">
+                    <i class="fas fa-pen"></i> Start from Scratch
+                </a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function downloadMyResume() {
+    const el = document.getElementById('my-resume-preview');
+    if (!el) return;
+    const opt = {
+        margin: 0,
+        filename: 'My-Resume-ResumeAI.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+    html2pdf().set(opt).from(el).save();
+}
+</script>
+{% endblock %}

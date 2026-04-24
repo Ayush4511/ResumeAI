@@ -60,6 +60,7 @@ function handleFile(file) {
     }
 
     currentFile = file;
+    if (typeof _lastFile !== 'undefined') _lastFile = file; // sync for build-resume
     selectedFileName.textContent = file.name;
     selectedFileSize.textContent = formatBytes(file.size);
     showState('selected');

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - ResumeAI{% endblock %}
+
+{% block content %}
+<section class="admin-page">
+    <div class="container">
+        <div class="page-header">
+            <div class="section-badge">Admin</div>
+            <h1>Resume <span class="gradient-text">Dashboard</span></h1>
+            <p>Global resume analyses, ranked by overall score.</p>
+        </div>
+
+        {% if rows %}
+        <!-- Quick Stats -->
+        <div class="history-stats">
+            <div class="hs-card">
+                <i class="fas fa-file-alt"></i>
+                <div class="hs-value">{{ rows|length }}</div>
+                <div class="hs-label">Total Analyses</div>
+            </div>
+            <div class="hs-card">
+                <i class="fas fa-users"></i>
+                <div class="hs-value">{{ rows|map(attribute='username')|unique|list|length }}</div>
+                <div class="hs-label">Users</div>
+            </div>
+            <div class="hs-card">
+                <i class="fas fa-chart-line"></i>
+                <div class="hs-value">
+                    {{ (rows|map(attribute='overall_score')|list|sum / rows|length)|round|int }}
+                </div>
+                <div class="hs-label">Avg Score</div>
+            </div>
+            <div class="hs-card">
+                <i class="fas fa-trophy"></i>
+                <div class="hs-value">{{ rows|map(attribute='overall_score')|list|max }}</div>
+                <div class="hs-label">Top Score</div>
+            </div>
+        </div>
+
+        <div class="admin-table-wrap">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th># Rank</th>
+                        <th>Filename</th>
+                        <th>User</th>
+                        <th>Score</th>
+                        <th>ATS Rate</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in rows %}
+                    <tr>
+                        <td style="font-weight:700;color:var(--text-muted);">{{ loop.index }}</td>
+                        <td>
+                            <span class="filename-cell">
+                                <i class="fas fa-file-pdf" style="color:#ef4444"></i>
+                                {{ row.filename[:30] }}{% if row.filename|length > 30 %}...{% endif %}
+                            </span>
+                        </td>
+                        <td style="color:var(--text-secondary);">{{ row.username or 'Guest' }}</td>
+                        <td>
+                            <span class="score-badge
+                                {% if row.overall_score >= 80 %}score-good
+                                {% elif row.overall_score >= 60 %}score-avg
+                                {% else %}score-bad{% endif %}">
+                                {{ row.overall_score }}/100
+                            </span>
+                        </td>
+                        <td style="font-weight:700;color:var(--primary-light);">{{ row.ats_parse_rate }}%</td>
+                        <td class="date-cell">{{ row.created_at[:10] }}</td>
+                        <td>
+                            <a href="{{ url_for('result', analysis_id=row.id) }}" class="btn-sm">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon"><i class="fas fa-inbox"></i></div>
+            <h3>No Analyses Yet</h3>
+            <p>Resumes will appear here once submitted.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

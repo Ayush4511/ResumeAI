@@ -1,3 +1,9 @@
+
+
+================================================================================
+--- FILE: app.py ---
+================================================================================
+
 """
 ATS Resume Analyzer - Main Flask Application
 ==========================================
@@ -798,672 +804,483 @@ def upload():
         john doe software engineer
         experience senior developer google 2020 2024
         developed python microservices increased performance by 40%
-        led team of 8 engineers delivered 15 features
-        education bachelor computer science university 2019
-        skills python javascript react sql docker aws machine learning
-        projects built recommendation system reduced churn by 25%
-        contact john@example.com +91 9876543210 linkedin.com/in/johndoe
-        certifications aws cloud practitioner
-        summary results-driven software engineer with 5 years experience
-        """
-
-    # grab optional job description from form
-    job_desc = request.form.get("job_desc", "").strip()
-    result = analyze_resume(text, filename, job_desc if job_desc else None)
-    result["_resume_text"] = text[:4000]  # store for AI feedback route
-    user_id = session.get("user_id")
-    analysis_id = save_analysis(filename, result, job_desc if job_desc else None, user_id=user_id)
-
-    # Clean up file after analysis
-    try:
-        os.remove(filepath)
-    except Exception:
-        pass
-
-    # Ensure session has at least regex-parsed data so "My Resume" has something to show!
-    if "parsed_resume" not in session or session.get("last_analysis_id") != analysis_id:
-        session["parsed_resume"] = _regex_parse_resume(text)
-        
-    session["last_analysis_id"] = analysis_id
-    return jsonify({"success": True, "id": analysis_id, "result": result, "ai_available": GEMINI_AVAILABLE})
 
 
-@app.route("/result/<int:analysis_id>")
-def result(analysis_id):
-    """Show detailed analysis result."""
-    conn = get_db()
-    row = conn.execute(
-        "SELECT * FROM analyses WHERE id = ?", (analysis_id,)
-    ).fetchone()
-    conn.close()
-
-    if not row:
-        return redirect(url_for("check"))
-
-    data = json.loads(row["analysis_json"])
-    return render_template("result.html", analysis=data, row=row, id=analysis_id)
+# ... [ CODE TRUNCATED FOR BREVITY ] ...
 
 
-@app.route("/history")
-def history():
-    """Show past analyses."""
-    conn = get_db()
-    rows = conn.execute(
-        "SELECT * FROM analyses ORDER BY created_at DESC LIMIT 20"
-    ).fetchall()
-    conn.close()
-    return render_template("history.html", rows=rows)
+================================================================================
+--- FILE: templates\index.html ---
+================================================================================
+
+{% extends "base.html" %}
+{% block title %}ResumeAI - Free ATS Resume Checker{% endblock %}
+
+{% block content %}
+
+<!-- ─── Hero Section ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-bg">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-particles" id="particles"></div>
+    </div>
+
+    <div class="hero-grid">
+        <!-- LEFT: Text & CTA -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i> AI-Powered · Free · Instant Results
+            </div>
+
+            <h1 class="hero-title">
+                Is Your Resume <br>
+                <span class="gradient-text">ATS-Ready?</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Our AI checks 16 crucial things across 5 categories to ensure your resume
+                gets past Applicant Tracking Systems – you can even paste a job description for
+                relevance scoring.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
+                    <i class="fas fa-upload"></i> Upload My Resume — It's Free
+                </a>
+                <a href="#how-it-works" class="btn-ghost btn-lg smooth-scroll">
+                    <i class="fas fa-play-circle"></i> See How It Works
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-pill">
+                    <strong>{{ stats['total'] or '500+' }}</strong>
+                    <span>Resumes Analyzed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>{{ stats['avg_job_match'] or '-' }}%</strong>
+                    <span>Avg Job Match</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>16</strong>
+                    <span>Checks Performed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>Free</strong>
+                    <span>Always & Forever</span>
+                </div>
+            </div>
+
+            <!-- NEW: Mini feature badges below stats -->
+            <div class="hero-mini-features">
+                <div class="hmf-item"><i class="fas fa-shield-alt"></i> ATS Compatible</div>
+                <div class="hmf-item"><i class="fas fa-magic"></i> AI-Powered Builder</div>
+                <div class="hmf-item"><i class="fas fa-lock"></i> 100% Private</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Preview Card -->
+        <div class="hero-visual">
+            <div class="preview-card animate-float">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="preview-title">Resume Score</span>
+                </div>
+                <div class="preview-score">
+                    <div class="score-ring" data-score="87">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                            <circle class="ring-fill" cx="60" cy="60" r="50"
+                                    style="stroke-dashoffset: 85"/>
+                        </svg>
+                        <div class="score-value">87<span>/100</span></div>
+                    </div>
+                </div>
+                <div class="preview-bars">
+                    <div class="bar-item">
+                        <span>Content</span>
+                        <div class="bar"><div class="bar-fill" style="width:90%;background:#10b981"></div></div>
+                        <span>90%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span>Format</span>
+                        <div class="bar"><div class="bar-fill" style="width:85%;background:#3b82f6"></div></div>
+                        <span>85%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span>Keywords</span>
+                        <div class="bar"><div class="bar-fill" style="width:78%;background:#8b5cf6"></div></div>
+                        <span>78%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Floating mini-cards around the preview card -->
+            <div class="float-badge badge-1 animate-float-slow">
+                <i class="fas fa-check-circle" style="color:#10b981"></i> ATS Passed
+            </div>
+            <div class="float-badge badge-2 animate-float-slow" style="animation-delay:-2s">
+                <i class="fas fa-star" style="color:#f59e0b"></i> Top 15%
+            </div>
+            <div class="float-badge badge-3 animate-float-slow" style="animation-delay:-4s">
+                <i class="fas fa-chart-line" style="color:#8b5cf6"></i> +32% Impact
+            </div>
+            <div class="float-badge badge-4 animate-float-slow" style="animation-delay:-1s">
+                <i class="fas fa-eye" style="color:#3b82f6"></i> 98% Readable
+            </div>
+            <div class="float-badge badge-5 animate-float-slow" style="animation-delay:-3s">
+                <i class="fas fa-key" style="color:#f59e0b"></i> Keywords: Strong
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ─── Trust Logos ─────────────────────────────────────────────────────────── -->
+<section class="trust-section">
+    <p class="trust-label">Trusted by job seekers targeting</p>
+    <div class="trust-logos">
+        <span class="trust-logo">Google</span>
+        <span class="trust-logo">Amazon</span>
+        <span class="trust-logo">Microsoft</span>
+        <span class="trust-logo">Infosys</span>
+        <span class="trust-logo">TCS</span>
+        <span class="trust-logo">Wipro</span>
+    </div>
+</section>
+
+<!-- ─── How It Works ─────────────────────────────────────────────────────────── -->
+<section class="section" id="how-it-works">
+    <div class="container">
+        <div class="section-header">
+            <div class="section-badge">How It Works</div>
+            <h2>Get Results in <span class="gradient-text">3 Simple Steps</span></h2>
+            <p>No signup required. Upload, analyze, improve.</p>
+        </div>
+
+        <div class="steps-grid">
 
 
-@app.route("/api/stats")
-def api_stats():
-    """API endpoint for dashboard stats."""
-    conn = get_db()
-    stats = conn.execute("""
-        SELECT
-            COUNT(*) as total_analyses,
-            ROUND(AVG(overall_score), 1) as avg_score,
-            COUNT(CASE WHEN overall_score >= 80 THEN 1 END) as high_score_count,
-            COUNT(CASE WHEN overall_score < 60 THEN 1 END) as low_score_count,
-            ROUND(AVG(similarity_score), 1) as avg_job_match,
-            COUNT(similarity_score) as analyses_with_job_desc
-        FROM analyses
-    """).fetchone()
-    conn.close()
-    return jsonify(dict(stats))
+# ... [ CODE TRUNCATED FOR BREVITY ] ...
 
 
-@app.route("/api/ai-feedback/<int:analysis_id>", methods=["GET"])
-def ai_feedback(analysis_id):
-    """Generate and return AI coaching feedback for a stored analysis."""
-    if not GEMINI_AVAILABLE:
-        return jsonify({"error": "AI not configured. Add GEMINI_API_KEY to your .env file."}), 503
+================================================================================
+--- FILE: templates\builder.html ---
+================================================================================
 
-    conn = get_db()
-    row = conn.execute("SELECT * FROM analyses WHERE id = ?", (analysis_id,)).fetchone()
-    conn.close()
+{% extends "base.html" %}
 
-    if not row:
-        return jsonify({"error": "Analysis not found"}), 404
+{% block title %}Resume Builder - ResumeAI{% endblock %}
 
-    data = json.loads(row["analysis_json"])
-    resume_text = data.get("_resume_text", "")  # may be empty for old analyses
-    job_desc = row["job_description"]
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/builder.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/templates.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+    /* Builder is a full-screen app – hide footer & prevent body scroll */
+    .footer { display: none !important; }
+    body { overflow: hidden !important; }
+</style>
 
-    feedback = generate_ai_feedback(resume_text, data, job_desc)
-    if feedback is None:
-        return jsonify({"error": "AI generation failed. Please try again."}), 500
+<div class="builder-container">
+    <div class="sidebar-editor">
+        <div class="editor-header">
+            <div class="editor-brand">
+                <div class="editor-icon"><i class="fas fa-pen-nib"></i></div>
+                <div>
+                    <h2>Resume Builder</h2>
+                    <span class="editor-tagline">Craft your perfect resume</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="btn-builder-action btn-improve" onclick="improveResume()">
+                    <i class="fas fa-magic"></i> Improve
+                </button>
+                <button type="button" class="btn-builder-action btn-save" onclick="saveResume()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </div>
 
-    return jsonify({"feedback": feedback})
+        <form id="resume-form">
+            <!-- Template Selection -->
+            <div class="form-section template-section">
+                <div class="section-icon"><i class="fas fa-palette"></i></div>
+                <div class="section-body">
+                    <h3>Template</h3>
+                    <select id="template-select" class="form-control" onchange="changeTemplate(this.value)">
+                        <option value="fresher">🎓 Fresher Focus</option>
+                        <option value="developer">💻 Developer Mode</option>
+                        <option value="professional">💼 Professional Standard</option>
+                        <option value="photo" selected>📸 Premium Photo</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Photo Upload (only for photo template) -->
+            <div class="form-section" id="photo-upload-section" style="padding:0.85rem 1rem;">
+                <div style="display:flex;align-items:center;gap:0.75rem;">
+                    <div class="section-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <h3 style="font-size:0.78rem;color:var(--text-secondary);font-weight:600;margin:0 0 0.35rem;text-transform:uppercase;letter-spacing:.04em;">Profile Photo</h3>
+                        <input type="file" id="r-photo" accept="image/*" onchange="previewPhoto(this)" class="form-control" style="font-size:0.8rem;padding:0.35rem;">
+                    </div>
+                    <div id="photo-preview-wrap" style="display:none;">
+                        <img id="photo-preview-thumb" style="width:44px;height:52px;object-fit:cover;border-radius:4px;border:2px solid var(--border);">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Personal Info -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-user"></i> Personal Information</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content">
+                    <div class="field-grid">
+                        <input type="text" id="r-name" placeholder="Full Name" oninput="updatePreview()" class="form-control">
+                        <input type="text" id="r-title" placeholder="Job Title" oninput="updatePreview()" class="form-control">
+                    </div>
+                    <div class="field-grid">
+                        <input type="email" id="r-email" placeholder="Email Address" oninput="updatePreview()" class="form-control">
+                        <input type="tel" id="r-phone" placeholder="Phone Number" oninput="updatePreview()" class="form-control">
+                    </div>
+                    <div class="field-grid">
+                        <input type="text" id="r-location" placeholder="City, Country" oninput="updatePreview()" class="form-control">
+                        <input type="url" id="r-linkedin" placeholder="LinkedIn URL" oninput="updatePreview()" class="form-control">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-align-left"></i> Professional Summary</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content">
+                    <textarea id="r-summary" rows="4" placeholder="Write a brief, compelling summary of your professional background..." oninput="updatePreview()" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-briefcase"></i> Experience</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content" id="experience-container">
+                    <!-- Dynamic Experience entries -->
+                </div>
+                <button type="button" class="btn-add-entry" onclick="addExperience()">
+                    <i class="fas fa-plus-circle"></i> Add Experience
+                </button>
+            </div>
+
+            <!-- Education -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-graduation-cap"></i> Education</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content" id="education-container">
+                    <!-- Dynamic Education entries -->
+                </div>
+                <button type="button" class="btn-add-entry" onclick="addEducation()">
+                    <i class="fas fa-plus-circle"></i> Add Education
+                </button>
+            </div>
+            
+            <!-- Projects -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-rocket"></i> Projects</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content" id="projects-container">
+                    <!-- Dynamic Projects entries -->
+                </div>
+                <button type="button" class="btn-add-entry" onclick="addProject()">
+                    <i class="fas fa-plus-circle"></i> Add Project
+                </button>
+            </div>
+
+            <!-- Skills -->
+            <div class="form-section collapsible">
+                <h3 onclick="toggleSection(this)">
+                    <span class="sec-label"><i class="fas fa-tools"></i> Skills</span>
+                    <span class="sec-chevron"><i class="fas fa-chevron-down"></i></span>
+                </h3>
+                <div class="section-content">
+                    <textarea id="r-skills" rows="3" placeholder="Python, JavaScript, React, Node.js, SQL..." oninput="updatePreview()" class="form-control"></textarea>
+                    <p class="field-hint">Separate skills with commas</p>
+                </div>
 
 
-@app.route("/builder")
-def builder():
-    """Resume Builder UI."""
-    return render_template("builder.html")
+# ... [ CODE TRUNCATED FOR BREVITY ] ...
 
 
-@app.route("/api/resume/save", methods=["POST"])
-@login_required
-def save_resume():
-    """Save builder draft to database."""
-    data = request.json
-    resume_data = json.dumps(data.get("resumeData", {}))
-    template_id = data.get("templateId", "fresher")
-    user_id = session.get("user_id")
+================================================================================
+--- FILE: static\css\main.css ---
+================================================================================
 
-    conn = get_db()
-    # Check if user already has a saved resume draft
-    existing = conn.execute("SELECT id FROM resumes WHERE user_id = ?", (user_id,)).fetchone()
-    if existing:
-        conn.execute("UPDATE resumes SET resume_data = ?, template_id = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?",
-                     (resume_data, template_id, existing['id']))
-    else:
-        conn.execute("INSERT INTO resumes (user_id, template_id, resume_data) VALUES (?, ?, ?)",
-                     (user_id, template_id, resume_data))
-    
-    conn.commit()
-    conn.close()
-    return jsonify({"success": True, "message": "Resume saved successfully"})
+/* ═══════════════════════════════════════════════════════
+   ResumeAI - Main Stylesheet
+   Modern, clean, SaaS-style design
+═══════════════════════════════════════════════════════ */
 
+/* ─── CSS Variables ─────────────────────────────────── */
+:root {
+  --primary: #6d28d9;
+  --primary-light: #8b5cf6;
+  --primary-dark: #5b21b6;
+  --accent: #10b981;
+  --accent-2: #3b82f6;
 
-@app.route("/api/resume/load", methods=["GET"])
-@login_required
-def load_resume():
-    """Load builder draft from database."""
-    user_id = session.get("user_id")
-    conn = get_db()
-    row = conn.execute("SELECT template_id, resume_data FROM resumes WHERE user_id = ?", (user_id,)).fetchone()
-    conn.close()
+  --bg: #ffffff;
+  --bg-2: #f8fafc;
+  --bg-3: #f1f5f9;
+  --border: #e2e8f0;
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
 
-    if row:
-        return jsonify({
-            "success": True,
-            "templateId": row["template_id"],
-            "resumeData": json.loads(row["resume_data"])
-        })
-    return jsonify({"success": False, "message": "No saved resume found"})
+  --text: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
 
-
-@app.route("/api/match", methods=["POST"])
-def match_job():
-    """Compare resume text against a job description.
-    Reuses extract_keywords() and compute_similarity() from the ATS engine.
-    Returns match score, found/missing keywords, and suggestions.
-    """
-    data = request.json or {}
-    resume_text = (data.get("resumeText") or "").strip().lower()
-    job_desc    = (data.get("jobDescription") or "").strip().lower()
-
-    if not resume_text or not job_desc:
-        return jsonify({"error": "Both resumeText and jobDescription are required."}), 400
-
-    # ── Similarity score (TF-IDF cosine or fallback) ──────────────────────────
-    similarity = compute_similarity(resume_text, job_desc)
-    match_score = min(100, int(similarity * 100))
-
-    # ── Keyword analysis ──────────────────────────────────────────────────────
-    resume_kw = set(extract_keywords(resume_text, top_n=30))
-    job_kw    = set(extract_keywords(job_desc,    top_n=30))
-
-    found   = sorted(resume_kw & job_kw)
-    missing = sorted(job_kw - resume_kw)
-
-    # ── Action-verb check against job description ─────────────────────────────
-    jd_action_verbs = [v for v in ATS_KEYWORDS["action_verbs"] if v in job_desc]
-    missing_verbs   = [v for v in jd_action_verbs if v not in resume_text]
-
-    # ── Build suggestions ─────────────────────────────────────────────────────
-    suggestions = []
-    if match_score < 40:
-        suggestions.append("Your resume has low alignment with this job description. Consider a significant rewrite targeting this role.")
-    elif match_score < 65:
-        suggestions.append("Moderate alignment detected. Adding the missing keywords below can meaningfully boost your match.")
-
-    if missing:
-        suggestions.append("Add these keywords to your resume: " + ", ".join(missing[:12]))
-    if missing_verbs:
-        suggestions.append("The JD uses these action verbs you're missing: " + ", ".join(missing_verbs[:8]))
-    if not suggestions:
-        suggestions.append("Great match! Your resume already covers most of the job description keywords.")
-
-    return jsonify({
-        "matchScore":    match_score,
-        "foundKeywords": found,
-        "missingKeywords": missing,
-        "missingVerbs":  missing_verbs,
-        "suggestions":   suggestions,
-    })
-
-
-# ─── Improve Resume Engine ────────────────────────────────────────────────────
-
-# Mapping of weak phrases to strong replacements for rule-based improvement
-WEAK_TO_STRONG = {
-    "responsible for": "Spearheaded",
-    "duties included": "Delivered",
-    "worked on": "Engineered",
-    "helped with": "Contributed to",
-    "was involved in": "Drove",
-    "assisted in": "Supported and executed",
-    "participated in": "Collaborated on",
-    "handled": "Managed",
-    "did": "Executed",
-    "made": "Developed",
+  --radius: 16px;
+  --radius-sm: 8px;
+  --radius-lg: 24px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-# Strong opening verbs to rotate through when rule-based rewriting
-STRONG_OPENERS = [
-    "Developed", "Engineered", "Architected", "Designed", "Implemented",
-    "Optimized", "Delivered", "Launched", "Automated", "Spearheaded",
-    "Led", "Built", "Streamlined", "Orchestrated", "Transformed",
-]
-
-
-def _rule_based_improve_bullet(text):
-    """Improve a single bullet point using deterministic rules."""
-    if not text or not text.strip():
-        return text
-
-    improved = text.strip()
-
-    # 1. Replace weak phrases
-    for weak, strong in WEAK_TO_STRONG.items():
-        if weak in improved.lower():
-            # Case-insensitive replacement keeping the rest of the sentence
-            idx = improved.lower().index(weak)
-            improved = strong + " " + improved[idx + len(weak):].strip()
-
-    # 2. If it doesn't start with a strong verb, prepend one
-    first_word = improved.split()[0].lower() if improved.split() else ""
-    all_verbs_lower = [v.lower() for v in STRONG_OPENERS] + ATS_KEYWORDS["action_verbs"]
-    if first_word not in all_verbs_lower:
-        import hashlib
-        idx = int(hashlib.md5(improved.encode()).hexdigest(), 16) % len(STRONG_OPENERS)
-        improved = STRONG_OPENERS[idx] + " " + improved[0].lower() + improved[1:]
-
-    # 3. Add quantification hint if no numbers present
-    if not re.search(r'\d', improved):
-        improved = improved.rstrip('.') + ", resulting in measurable impact."
-
-    # 4. Capitalize first letter
-    improved = improved[0].upper() + improved[1:] if improved else improved
-
-    return improved
-
-
-def _rule_based_improve_summary(summary, title=""):
-    """Rewrite a professional summary using rules."""
-    if not summary or not summary.strip():
-        return f"Results-driven {title or 'professional'} with a proven track record of delivering high-impact solutions. Adept at collaborating with cross-functional teams to drive innovation and exceed business objectives."
-
-    # Basic cleanup: remove weak phrases and ensure strong opening
-    improved = summary.strip()
-    for weak, strong in WEAK_TO_STRONG.items():
-        if weak in improved.lower():
-            idx = improved.lower().index(weak)
-            improved = improved[:idx] + strong.lower() + " " + improved[idx + len(weak):]
-
-    # Ensure it starts powerfully
-    if not any(improved.lower().startswith(v) for v in ["results", "accomplished", "dynamic", "innovative", "seasoned", "detail", "proactive"]):
-        improved = f"Results-driven {title or 'professional'} who {improved[0].lower()}{improved[1:]}"
-
-    return improved
-
-
-@app.route("/api/ai/improve", methods=["POST"])
-def improve_resume():
-    """1-click resume improvement.
-    Uses Gemini when available, otherwise falls back to rule-based rewrites.
-    Returns before/after pairs for summary and each bullet point.
-    """
-    data = request.json or {}
-    summary_before  = (data.get("summary") or "").strip()
-    title           = (data.get("title") or "").strip()
-    experiences     = data.get("experience", [])   # [{description: "..."}, ...]
-    projects        = data.get("projects", [])      # [{description: "..."}, ...]
-
-    improvements = {"summary": {}, "experience": [], "projects": []}
-
-    # ── Gemini path ───────────────────────────────────────────────────────────
-    if GEMINI_AVAILABLE and _gemini_client:
-        # Build a single prompt covering all sections for efficiency
-        bullet_texts = []
-        for i, exp in enumerate(experiences):
-            desc = (exp.get("description") or "").strip()
-            if desc:
-                bullet_texts.append(f"EXP_{i}: {desc}")
-        for i, proj in enumerate(projects):
-            desc = (proj.get("description") or "").strip()
-            if desc:
-                bullet_texts.append(f"PROJ_{i}: {desc}")
-
-        bullets_block = "\n".join(bullet_texts) if bullet_texts else "(none provided)"
-
-        prompt = f"""You are an expert resume writer. Rewrite the following resume sections to be powerful, ATS-optimized, and quantified.
-
-RULES:
-- Start every bullet with a strong action verb (e.g., Developed, Engineered, Led, Optimized).
-- Remove weak phrases like 'responsible for', 'worked on', 'helped with'.
-- Add quantified impact where possible (e.g., 'increased efficiency by 30%').
-- Keep each bullet to 1-2 concise sentences.
-- For the summary, write 2-3 sentences; mention the job title "{title}" if relevant.
-
-SUMMARY (original):
-{summary_before or "(empty)"}
-
-BULLET POINTS (prefixed with EXP_N or PROJ_N):
-{bullets_block}
-
-Return ONLY valid JSON (no markdown fences) in this exact format:
-{{
-  "summary": "improved summary text",
-  "bullets": {{
-    "EXP_0": "improved text",
-    "PROJ_0": "improved text"
-  }}
-}}"""
-
-        try:
-            response = _gemini_client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
-            raw = response.text.strip()
-            # Strip markdown code fences if present
-            if raw.startswith("```"):
-                raw = re.sub(r'^```(?:json)?\s*', '', raw)
-                raw = re.sub(r'```\s*$', '', raw)
-
-            ai_result = json.loads(raw)
-
-            # Summary
-            improvements["summary"] = {
-                "before": summary_before,
-                "after": ai_result.get("summary", summary_before)
-            }
-
-            # Experience bullets
-            for i, exp in enumerate(experiences):
-                desc = (exp.get("description") or "").strip()
-                key = f"EXP_{i}"
-                improvements["experience"].append({
-                    "before": desc,
-                    "after": ai_result.get("bullets", {}).get(key, desc)
-                })
-
-            # Project bullets
-            for i, proj in enumerate(projects):
-                desc = (proj.get("description") or "").strip()
-                key = f"PROJ_{i}"
-                improvements["projects"].append({
-                    "before": desc,
-                    "after": ai_result.get("bullets", {}).get(key, desc)
-                })
-
-            return jsonify({"success": True, "method": "ai", "improvements": improvements})
-
-        except Exception as e:
-            # Fall through to rule-based if AI fails
-            pass
-
-    # ── Rule-based fallback ───────────────────────────────────────────────────
-    improvements["summary"] = {
-        "before": summary_before,
-        "after": _rule_based_improve_summary(summary_before, title)
-    }
-
-    for exp in experiences:
-        desc = (exp.get("description") or "").strip()
-        improvements["experience"].append({
-            "before": desc,
-            "after": _rule_based_improve_bullet(desc) if desc else ""
-        })
-
-    for proj in projects:
-        desc = (proj.get("description") or "").strip()
-        improvements["projects"].append({
-            "before": desc,
-            "after": _rule_based_improve_bullet(desc) if desc else ""
-        })
-
-    return jsonify({"success": True, "method": "rule-based", "improvements": improvements})
-
-
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
-
-# ─── Resume Parse API ─────────────────────────────────────────────────────────
-
-def _regex_parse_resume(text):
-    """Fallback: extract key fields from resume text using simple patterns."""
-    data = {
-        "name": "", "title": "", "email": "", "phone": "",
-        "location": "", "linkedin": "", "summary": "",
-        "experience": [], "education": [], "projects": [], "skills": ""
-    }
-    # Email
-    email_m = re.search(r'[\w.+-]+@[\w-]+\.[\w.]+', text)
-    if email_m:
-        data["email"] = email_m.group(0)
-    # Phone
-    phone_m = re.search(r'[\+]?[1-9][0-9 .\-()]{7,14}[0-9]', text)
-    if phone_m:
-        data["phone"] = phone_m.group(0).strip()
-    # LinkedIn
-    li_m = re.search(r'linkedin\.com/in/[\w\-]+', text, re.I)
-    if li_m:
-        data["linkedin"] = li_m.group(0)
-    # Name: typically first non-empty line
-    lines = [l.strip() for l in text.split('\n') if l.strip()]
-    if lines:
-        data["name"] = lines[0].title()
-    # Skills: look for skills section
-    skills_m = re.search(
-        r'(?:skills?|technical skills?|core competencies)[:\s]+([^\n]{10,}(?:\n[^\n]{5,}){0,5})',
-        text, re.I)
-    if skills_m:
-        raw = skills_m.group(1).replace('\n', ', ')
-        data["skills"] = re.sub(r',\s*,', ',', raw).strip(', ')
-    return data
-
-
-@app.route("/api/parse-resume", methods=["POST"])
-def parse_resume_api():
-    """Parse an uploaded resume file and return structured JSON for the builder."""
-    if "resume" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
-
-    file = request.files["resume"]
-    if file.filename == "" or not allowed_file(file.filename):
-        return jsonify({"error": "Invalid file. Only PDF/DOCX allowed."}), 400
-
-    filename = secure_filename(file.filename)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    tmp_path = os.path.join(app.config["UPLOAD_FOLDER"], f"parse_{timestamp}_{filename}")
-    file.save(tmp_path)
-
-    raw_text = extract_text_from_file(tmp_path)
-    try:
-        os.remove(tmp_path)
-    except Exception:
-        pass
-
-    # Use Gemini if available for accurate structured extraction
-    if GEMINI_AVAILABLE and _gemini_client and len(raw_text.strip()) > 100:
-        prompt = f"""You are a resume parser. Extract the following fields from the resume text below and return ONLY valid JSON (no markdown fences, no explanation).
-
-Fields to extract:
-- name: Full name of the person
-- title: Current or target job title
-- email: Email address
-- phone: Phone number
-- location: City, Country/State
-- linkedin: LinkedIn URL (just the path like linkedin.com/in/username)
-- website: Personal website if present
-- summary: Professional summary paragraph
-- experience: Array of objects with fields: role, company, duration, description (bullet points joined by \\n)
-- education: Array of objects with fields: degree, school, duration, description
-- projects: Array of objects with fields: name, description
-- skills: Comma-separated string of all skills
-- certifications: Comma-separated string
-- languages: Comma-separated string
-- awards: String
-
-Resume text:
-{raw_text[:6000]}
-
-Return JSON only:"""
-        try:
-            resp = _gemini_client.models.generate_content(
-                model="gemini-2.0-flash",
-                contents=prompt
-            )
-            raw = resp.text.strip()
-            if raw.startswith("```"):
-                raw = re.sub(r'^```(?:json)?\s*', '', raw)
-                raw = re.sub(r'```\s*$', '', raw)
-            parsed = json.loads(raw)
-            # Store in session for builder to pick up
-            session["parsed_resume"] = parsed
-            return jsonify({"success": True, "method": "ai", "data": parsed})
-        except Exception as e:
-            pass  # fall through to regex
-
-    # Regex fallback
-    parsed = _regex_parse_resume(raw_text)
-    session["parsed_resume"] = parsed
-    return jsonify({"success": True, "method": "regex", "data": parsed})
-
-
-# ─── My Resume Page ───────────────────────────────────────────────────────────
-
-@app.route("/my-resume")
-def my_resume():
-    """Show the user's saved resume in the premium template with edit option."""
-    user_id = session.get("user_id")
-    resume_row = None
-    resume_data = None
-    template_id = "photo"  # default to photo template
-
-    history_rows = []
-
-    if user_id:
-        conn = get_db()
-        resume_row = conn.execute(
-            "SELECT * FROM resumes WHERE user_id = ? ORDER BY updated_at DESC LIMIT 1",
-            (user_id,)
-        ).fetchone()
-        
-        history_rows = conn.execute(
-            "SELECT * FROM analyses WHERE user_id = ? ORDER BY created_at DESC",
-            (user_id,)
-        ).fetchall()
-        conn.close()
-        
-        if resume_row:
-            resume_data = json.loads(resume_row["resume_data"])
-            template_id = resume_row["template_id"] or "photo"
-
-    # Also check session parsed data
-    session_parsed = session.get("parsed_resume")
-
-    return render_template(
-        "my_resume.html",
-        username=session.get("username"),
-        resume_data=resume_data,
-        template_id=template_id,
-        session_parsed=session_parsed,
-        history_rows=history_rows,
-        is_logged_in=bool(user_id)
-    )
-
-
-# ─── Entry Point ──────────────────────────────────────────────────────────────
-
-
-# ─── AI Resume Improve Endpoint ───────────────────────────────────────────────
-
-def _rule_based_improve(payload):
-    """Simple rule-based fallback that rewrites text with stronger phrasing."""
-    import re as _re
-
-    def strengthen(text):
-        if not text or not text.strip():
-            return text
-        # Replace weak openers
-        replacements = [
-            (r'\bresponsible for\b', 'Led'),
-            (r'\bworked on\b', 'Developed'),
-            (r'\bhelped with\b', 'Contributed to'),
-            (r'\bassisted in\b', 'Supported'),
-            (r'\bwas involved in\b', 'Participated in'),
-            (r'\bduties included\b', 'Delivered'),
-        ]
-        result = text
-        for pattern, repl in replacements:
-            result = _re.sub(pattern, repl, result, flags=_re.IGNORECASE)
-        return result
-
-    improvements = {}
-
-    # Summary
-    summary_before = payload.get('summary', '')
-    improvements['summary'] = {
-        'before': summary_before,
-        'after': strengthen(summary_before) if summary_before else ''
-    }
-
-    # Experience
-    exp_improvements = []
-    for exp in payload.get('experience', []):
-        desc = exp.get('description', '')
-        exp_improvements.append({'before': desc, 'after': strengthen(desc)})
-    improvements['experience'] = exp_improvements
-
-    # Projects
-    proj_improvements = []
-    for proj in payload.get('projects', []):
-        desc = proj.get('description', '')
-        proj_improvements.append({'before': desc, 'after': strengthen(desc)})
-    improvements['projects'] = proj_improvements
-
-    return improvements
-
-
-@app.route('/api/ai/improve', methods=['POST'])
-def ai_improve():
-    """Use Gemini AI (or rule-based fallback) to improve resume text."""
-    data = request.get_json(force=True)
-    summary = data.get('summary', '')
-    title = data.get('title', '')
-    experience = data.get('experience', [])
-    projects = data.get('projects', [])
-
-    if GEMINI_AVAILABLE and _gemini_client:
-        # Build a structured prompt
-        exp_text = '\n'.join(
-            f"  - Experience {i+1}: {e.get('description','')}" 
-            for i, e in enumerate(experience) if e.get('description')
-        )
-        proj_text = '\n'.join(
-            f"  - Project {i+1}: {p.get('description','')}" 
-            for i, p in enumerate(projects) if p.get('description')
-        )
-
-        prompt = f"""You are an expert resume writer. Improve the following resume sections to be more impactful, using strong action verbs, quantified achievements, and professional language.
-
-Job Title: {title}
-Summary: {summary}
-Experience Descriptions:
-{exp_text if exp_text else '(none)'}
-Project Descriptions:
-{proj_text if proj_text else '(none)'}
-
-Return ONLY a valid JSON object (no markdown) with this structure:
-{{
-  "summary": {{"before": "<original>", "after": "<improved>"}},
-  "experience": [{{"before": "<original>", "after": "<improved>"}}],
-  "projects": [{{"before": "<original>", "after": "<improved>"}}]
-}}
-
-Rules:
-- Keep "before" as the exact original text
-- "after" should be concise, powerful, ATS-friendly
-- Do not add fictional metrics — only improve language and structure
-- If a field is empty, keep both before and after as empty strings"""
-
-        try:
-            resp = _gemini_client.models.generate_content(
-                model='gemini-2.0-flash',
-                contents=prompt
-            )
-            raw = resp.text.strip()
-            # Strip markdown code fences if present
-            raw = re.sub(r'^```(?:json)?\s*', '', raw)
-            raw = re.sub(r'```\s*$', '', raw)
-            improvements = json.loads(raw)
-            return jsonify({'success': True, 'method': 'ai', 'improvements': improvements})
-        except Exception as e:
-            pass  # fall through to rule-based
-
-    # Rule-based fallback
-    improvements = _rule_based_improve(data)
-    return jsonify({'success': True, 'method': 'rules', 'improvements': improvements})
-
-
-@app.route("/api/get-parsed-resume", methods=["GET"])
-def get_parsed_resume():
-    """Return stored parsed resume data from session for the builder to consume."""
-    parsed = session.get("parsed_resume")
-    if parsed:
-        return jsonify({"success": True, "data": parsed})
-    return jsonify({"success": False, "data": None})
-
-
-
-if __name__ == "__main__":
-    init_db()
-    app.run(debug=True, port=5000)
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-2: #1e293b;
+  --bg-3: #334155;
+  --border: #334155;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+}
+
+/* ─── Reset & Base ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; }
+
+/* ─── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+/* ─── Typography ─────────────────────────────────────── */
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.2; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-light), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Buttons ────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; padding: 0.75rem 1.75rem; border-radius: 50px;
+  font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px rgba(109,40,217,0.3);
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(109,40,217,0.4);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-lg { padding: 1rem 2.25rem; font-size: 1rem; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: var(--text); padding: 0.75rem 1.75rem;
+  border-radius: 50px; font-weight: 600; border: 2px solid var(--border);
+  cursor: pointer; transition: all var(--transition);
+}
+.btn-ghost:hover { border-color: var(--primary-light); color: var(--primary-light); background: rgba(109,40,217,0.05); }
+
+.btn-sm {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  background: var(--primary); color: white; padding: 0.4rem 1rem;
+  border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+  transition: all var(--transition);
+}
+.btn-sm:hover { background: var(--primary-dark); }
+
+/* ─── Section Utilities ──────────────────────────────── */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+.section { padding: 6rem 0; }
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.section-header p {
+  color: var(--text-secondary);
+  margin-top: 0.75rem;
+  font-size: 1.05rem;
+}
+
+.section-badge {
+  display: inline-flex; align-items: center;
+  background: rgba(109,40,217,0.1); color: var(--primary-light);
+  padding: 0.35rem 1rem; border-radius: 50px;
+  font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; margin-bottom: 1rem;
+}
+
+/* ─── Navbar ─────────────────────────────────────────── */
+.navbar {
+  position: fixed; top: 0; width: 100%; z-index: 1000;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  transition: all var(--transition);
+}
+[data-theme="dark"] .navbar {
+  background: rgba(15,23,42,0.85);
+}
+.navbar.scrolled {
+  box-shadow: 0 4px 30px rgba(0,0,0,0.1);
+}
+
+.nav-container {
+  max-width: 1200px; margin: 0 auto;
+
+
+# ... [ CODE TRUNCATED FOR BREVITY ] ...

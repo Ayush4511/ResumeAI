@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════════════
+   ResumeAI - Resume Template Styles
+   4 Templates: Fresher · Developer · Professional · Photo
+═══════════════════════════════════════════════════ */
+
+/* ── Base A4 doc shared styles ──────────────────── */
+#resume-preview {
+    color: #222;
+    line-height: 1.55;
+    font-size: 10pt;
+}
+.cv-section { margin-bottom: 16px; }
+.cv-text { margin: 0 0 8px 0; }
+.list-item { margin-bottom: 12px; }
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+.list-sub {
+    font-style: italic;
+    color: #555;
+    margin-bottom: 4px;
+    font-size: 9.5pt;
+}
+.list-desc { margin: 4px 0 0 0; font-size: 9.5pt; }
+
+
+/* ══════════════════════════════════════════════════
+   TEMPLATE 1 — Fresher Focus
+   Clean · centered header · blue accents
+══════════════════════════════════════════════════ */
+.template-fresher { font-family: 'Arial', sans-serif; }
+.template-fresher .cv-header {
+    text-align: center;
+    border-bottom: 2px solid #2b6cb0;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
+}
+.template-fresher h1 { font-size: 22pt; margin: 0; color: #1a365d; }
+.template-fresher h3 { font-size: 11pt; margin: 2px 0 6px; color: #4a5568; font-weight: 500; }
+.template-fresher .cv-contact { font-size: 9pt; color: #555; }
+.template-fresher .cv-contact .sep { margin: 0 5px; color: #a0aec0; }
+.template-fresher .cv-section-title {
+    color: #2b6cb0;
+    border-bottom: 1px solid #bee3f8;
+    padding-bottom: 4px;
+    text-transform: uppercase;
+    font-size: 10pt;
+    font-weight: 700;
+    letter-spacing: .05em;
+    margin-bottom: 10px;
+}
+
+
+/* ══════════════════════════════════════════════════
+   TEMPLATE 2 — Developer Mode
+   Monospaced headings · teal accent · compact
+══════════════════════════════════════════════════ */
+.template-developer { font-family: 'Segoe UI', Tahoma, sans-serif; }
+.template-developer .cv-header {
+    text-align: left;
+    background: #f0fff4;
+    padding: 14px 16px;
+    border-left: 4px solid #38b2ac;
+    margin-bottom: 18px;
+}
+.template-developer h1 { font-size: 22pt; margin: 0 0 3px; color: #1a202c; }
+.template-developer h3 { font-size: 10.5pt; margin: 0 0 7px; color: #38b2ac; font-weight: 600; }
+.template-developer .cv-contact { font-size: 9pt; color: #4a5568; }
+.template-developer .cv-contact .sep { margin: 0 4px; }
+.template-developer .cv-section-title {
+    color: #2c7a7b;
+    font-family: 'Courier New', monospace;
+    font-size: 10pt;
+    font-weight: 700;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    border-bottom: 1px dashed #b2f5ea;
+    padding-bottom: 3px;
+}
+
+
+/* ══════════════════════════════════════════════════
+   TEMPLATE 3 — Professional Standard
+   Serif · all-caps name · black borders
+══════════════════════════════════════════════════ */
+.template-professional { font-family: 'Georgia', serif; }
+.template-professional .cv-header {
+    text-align: center;
+    margin-bottom: 16px;
+    border-bottom: 2px solid #1a202c;
+    padding-bottom: 12px;
+}
+.template-professional h1 {
+    font-size: 22pt;
+    margin: 0 0 3px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #1a202c;
+}
+.template-professional h3 { font-size: 10pt; font-weight: 400; color: #555; margin: 0 0 6px; }
+.template-professional .cv-contact { font-size: 9pt; color: #444; }
+.template-professional .cv-contact .sep { margin: 0 5px; }
+.template-professional .cv-section-title {
+    text-transform: uppercase;
+    border-bottom: 1.5px solid #1a202c;
+    font-size: 10pt;
+    font-weight: 700;
+    margin-top: 14px;
+    margin-bottom: 8px;
+    padding-bottom: 3px;
+    letter-spacing: .08em;
+}
+.template-professional .list-header { font-family: Arial, sans-serif; }
+
+
+/* ══════════════════════════════════════════════════
+   TEMPLATE 4 — Premium Photo
+   Photo left · dark blue headings · bulleted lists
+   Matches the Benjamin Shah design
+══════════════════════════════════════════════════ */
+.template-photo { font-family: 'Calibri', 'Arial', sans-serif; }
+
+/* Header: photo left, info right */
+.template-photo .cv-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+}
+.template-photo .cv-photo-wrap {
+    flex-shrink: 0;
+    width: 130px;
+    height: 155px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 2px solid #e2e8f0;
+    background: #edf2f7;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.template-photo .cv-photo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.template-photo .cv-photo-wrap .photo-placeholder {
+    color: #a0aec0;
+    font-size: 11pt;
+    text-align: center;
+    padding: 8px;
+    font-style: italic;
+}
+.template-photo .cv-header-info { flex: 1; }
+.template-photo h1 {
+    font-size: 22pt;
+    font-weight: 900;
+    color: #1a3a6b;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.template-photo .cv-contact-table {
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    color: #333;
+}
+.template-photo .cv-contact-table td { padding: 1px 10px 1px 0; }
+.template-photo .cv-contact-table td:first-child {
+    font-weight: 700;
+    color: #1a3a6b;
+    white-space: nowrap;
+    min-width: 65px;
+}
+
+/* Section titles */
+.template-photo .cv-section-title {
+    color: #1a3a6b;
+    font-size: 11pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    border-bottom: 2px solid #1a3a6b;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+}
+
+/* Experience / Projects list items */
+.template-photo .list-item { margin-bottom: 14px; }
+.template-photo .list-header {
+    font-weight: 700;
+    font-size: 10pt;
+    color: #1a202c;
+}
+.template-photo .list-company { font-style: normal; color: #444; }
+.template-photo .list-date { font-size: 9pt; color: #555; white-space: nowrap; }
+.template-photo .list-sub { font-style: italic; font-size: 9pt; }
+.template-photo .list-bullets {
+    margin: 4px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+    font-size: 9.5pt;
+    color: #333;
+}
+.template-photo .list-bullets li { margin-bottom: 2px; }
+
+/* Education entries */
+.template-photo .edu-degree { font-weight: 700; font-size: 10pt; }
+.template-photo .edu-school { font-size: 9.5pt; color: #444; }
+.template-photo .edu-bullets {
+    margin: 3px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+    font-size: 9pt;
+    color: #444;
+}
+
+/* Skills — comma list or bullet groups */
+.template-photo .skills-group { margin-bottom: 5px; font-size: 9.5pt; }
+.template-photo .skills-group strong { color: #1a3a6b; }
+.template-photo .skills-bullets {
+    margin: 4px 0 0 16px;
+    padding: 0;
+    list-style: disc;
+    font-size: 9.5pt;
+    color: #333;
+    columns: 2;
+}
+.template-photo .skills-bullets li { margin-bottom: 2px; break-inside: avoid; }

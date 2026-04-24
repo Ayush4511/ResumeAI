@@ -1,0 +1,366 @@
+========================================================================
+                 RESUME AI - CONDENSED CODE FOR REPORT                  
+========================================================================
+
+This file contains snippets of the core files used in the project,
+truncated to fit easily within a report document.
+
+
+
+================================================================================
+--- FILE: app.py (Backend Logic) ---
+================================================================================
+
+"""
+ATS Resume Analyzer - Main Flask Application
+==========================================
+A production-level ATS resume checker with AI-powered analysis.
+"""
+
+import os
+import json
+import re
+import sqlite3
+from datetime import datetime
+from flask import Flask, render_template, request, jsonify, redirect, url_for, session, flash
+from werkzeug.utils import secure_filename
+import string
+import random
+from werkzeug.security import generate_password_hash, check_password_hash
+from functools import wraps
+from authlib.integrations.flask_client import OAuth
+
+# Load .env file (GEMINI_API_KEY lives here)
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
+
+# Gemini AI setup (uses new google-genai SDK)
+try:
+    from google import genai as _genai_sdk
+    _GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "").strip()
+    if _GEMINI_KEY and _GEMINI_KEY != "your_api_key_here":
+        _gemini_client = _genai_sdk.Client(api_key=_GEMINI_KEY)
+        GEMINI_AVAILABLE = True
+    else:
+        _gemini_client = None
+        GEMINI_AVAILABLE = False
+except ImportError:
+    _genai_sdk = None
+    _gemini_client = None
+    GEMINI_AVAILABLE = False
+
+# NLP libraries for enhanced keyword extraction and similarity
+try:
+    import nltk
+    from nltk.corpus import stopwords
+    from nltk.tokenize import word_tokenize
+    from nltk import pos_tag
+except ImportError:
+    nltk = None  # will handle gracefully later
+
+try:
+    from sklearn.feature_extraction.text import TfidfVectorizer
+    from sklearn.metrics.pairwise import cosine_similarity
+except ImportError:
+    TfidfVectorizer = None
+    cosine_similarity = None
+
+# ─── App Configuration ────────────────────────────────────────────────────────
+app = Flask(__name__)
+app.secret_key = "ats_resume_secret_key_2024"
+
+# ─── OAuth Configuration ──────────────────────────────────────────────────────
+oauth = OAuth(app)
+oauth.register(
+    name='google',
+    client_id=os.environ.get('GOOGLE_CLIENT_ID', 'placeholder'),
+    client_secret=os.environ.get('GOOGLE_CLIENT_SECRET', 'placeholder'),
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
+
+UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), "uploads")
+ALLOWED_EXTENSIONS = {"pdf", "docx"}
+MAX_FILE_SIZE = 2 * 1024 * 1024  # 2MB
+
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["MAX_CONTENT_LENGTH"] = MAX_FILE_SIZE
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# ─── Database Setup ───────────────────────────────────────────────────────────
+DB_PATH = os.path.join(os.path.dirname(__file__), "instance", "resume_analyzer.db")
+os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+
+def get_db():
+    """Get a database connection."""
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def init_db():
+    """Initialize the database with required tables."""
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.executescript("""
+
+
+# ... [ CODE TRUNCATED FOR BREVITY IN REPORT ] ...
+
+    parsed = session.get("parsed_resume")
+    if parsed:
+        return jsonify({"success": True, "data": parsed})
+    return jsonify({"success": False, "data": None})
+
+
+
+if __name__ == "__main__":
+    init_db()
+    app.run(debug=True, port=5000)
+
+
+================================================================================
+--- FILE: index.html (Homepage Template) ---
+================================================================================
+
+{% extends "base.html" %}
+{% block title %}ResumeAI - Free ATS Resume Checker{% endblock %}
+
+{% block content %}
+
+<!-- ─── Hero Section ─────────────────────────────────────────────────────────── -->
+<section class="hero">
+    <div class="hero-bg">
+        <div class="hero-blob blob-1"></div>
+        <div class="hero-blob blob-2"></div>
+        <div class="hero-particles" id="particles"></div>
+    </div>
+
+    <div class="hero-grid">
+        <!-- LEFT: Text & CTA -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i> AI-Powered · Free · Instant Results
+            </div>
+
+            <h1 class="hero-title">
+                Is Your Resume <br>
+                <span class="gradient-text">ATS-Ready?</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Our AI checks 16 crucial things across 5 categories to ensure your resume
+                gets past Applicant Tracking Systems – you can even paste a job description for
+                relevance scoring.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
+                    <i class="fas fa-upload"></i> Upload My Resume — It's Free
+                </a>
+                <a href="#how-it-works" class="btn-ghost btn-lg smooth-scroll">
+                    <i class="fas fa-play-circle"></i> See How It Works
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-pill">
+                    <strong>{{ stats['total'] or '500+' }}</strong>
+                    <span>Resumes Analyzed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>{{ stats['avg_job_match'] or '-' }}%</strong>
+                    <span>Avg Job Match</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>16</strong>
+                    <span>Checks Performed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>Free</strong>
+                    <span>Always & Forever</span>
+                </div>
+            </div>
+
+            <!-- NEW: Mini feature badges below stats -->
+            <div class="hero-mini-features">
+                <div class="hmf-item"><i class="fas fa-shield-alt"></i> ATS Compatible</div>
+                <div class="hmf-item"><i class="fas fa-magic"></i> AI-Powered Builder</div>
+                <div class="hmf-item"><i class="fas fa-lock"></i> 100% Private</div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Preview Card -->
+        <div class="hero-visual">
+            <div class="preview-card animate-float">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="preview-title">Resume Score</span>
+                </div>
+                <div class="preview-score">
+                    <div class="score-ring" data-score="87">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                            <circle class="ring-fill" cx="60" cy="60" r="50"
+                                    style="stroke-dashoffset: 85"/>
+                        </svg>
+                        <div class="score-value">87<span>/100</span></div>
+                    </div>
+                </div>
+                <div class="preview-bars">
+                    <div class="bar-item">
+                        <span>Content</span>
+                        <div class="bar"><div class="bar-fill" style="width:90%;background:#10b981"></div></div>
+                        <span>90%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span>Format</span>
+                        <div class="bar"><div class="bar-fill" style="width:85%;background:#3b82f6"></div></div>
+                        <span>85%</span>
+                    </div>
+                    <div class="bar-item">
+
+
+# ... [ CODE TRUNCATED FOR BREVITY IN REPORT ] ...
+
+        if (e.isIntersecting) {
+            e.target.querySelectorAll('.sdc-fill, .bar-fill').forEach(bar => {
+                bar.style.transition = 'width 1.2s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+        }
+    });
+});
+document.querySelectorAll('.sdc-categories, .preview-bars').forEach(el => barObserver.observe(el));
+</script>
+{% endblock %}
+
+================================================================================
+--- FILE: main.css (Primary Stylesheet) ---
+================================================================================
+
+/* ═══════════════════════════════════════════════════════
+   ResumeAI - Main Stylesheet
+   Modern, clean, SaaS-style design
+═══════════════════════════════════════════════════════ */
+
+/* ─── CSS Variables ─────────────────────────────────── */
+:root {
+  --primary: #6d28d9;
+  --primary-light: #8b5cf6;
+  --primary-dark: #5b21b6;
+  --accent: #10b981;
+  --accent-2: #3b82f6;
+
+  --bg: #ffffff;
+  --bg-2: #f8fafc;
+  --bg-3: #f1f5f9;
+  --border: #e2e8f0;
+  --shadow: 0 4px 24px rgba(0,0,0,0.06);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.12);
+
+  --text: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  --radius: 16px;
+  --radius-sm: 8px;
+  --radius-lg: 24px;
+  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark mode */
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --bg-2: #1e293b;
+  --bg-3: #334155;
+  --border: #334155;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-lg: 0 20px 60px rgba(0,0,0,0.5);
+  --text: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+}
+
+/* ─── Reset & Base ───────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  transition: background var(--transition), color var(--transition);
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; }
+
+/* ─── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-2); }
+::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 4px; }
+
+/* ─── Typography ─────────────────────────────────────── */
+h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 700; line-height: 1.2; }
+h3 { font-size: 1.25rem; font-weight: 600; }
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-light), var(--accent-2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Buttons ────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white; padding: 0.75rem 1.75rem; border-radius: 50px;
+  font-weight: 600; font-size: 0.95rem; border: none; cursor: pointer;
+  transition: all var(--transition);
+  box-shadow: 0 4px 15px rgba(109,40,217,0.3);
+  white-space: nowrap;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(109,40,217,0.4);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-lg { padding: 1rem 2.25rem; font-size: 1rem; }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  background: transparent; color: var(--text); padding: 0.75rem 1.75rem;
+  border-radius: 50px; font-weight: 600; border: 2px solid var(--border);
+  cursor: pointer; transition: all var(--transition);
+
+
+# ... [ CODE TRUNCATED FOR BREVITY IN REPORT ] ...
+
+  color: var(--text-secondary);
+  border-bottom: 2px solid var(--border);
+}
+.admin-table td {
+  padding: 1rem 1.25rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid var(--border);
+}
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: var(--bg-2); }

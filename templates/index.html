@@ -11,86 +11,115 @@
         <div class="hero-particles" id="particles"></div>
     </div>
 
-    <div class="hero-container">
-        <div class="hero-badge">
-            <i class="fas fa-bolt"></i> AI-Powered · Free · Instant Results
+    <div class="hero-grid">
+        <!-- LEFT: Text & CTA -->
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-bolt"></i> AI-Powered · Free · Instant Results
+            </div>
+
+            <h1 class="hero-title">
+                Is Your Resume <br>
+                <span class="gradient-text">ATS-Ready?</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Our AI checks 16 crucial things across 5 categories to ensure your resume
+                gets past Applicant Tracking Systems – you can even paste a job description for
+                relevance scoring.
+            </p>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
+                    <i class="fas fa-upload"></i> Upload My Resume — It's Free
+                </a>
+                <a href="#how-it-works" class="btn-ghost btn-lg smooth-scroll">
+                    <i class="fas fa-play-circle"></i> See How It Works
+                </a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-pill">
+                    <strong>{{ stats['total'] or '500+' }}</strong>
+                    <span>Resumes Analyzed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>{{ stats['avg_job_match'] or '-' }}%</strong>
+                    <span>Avg Job Match</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>16</strong>
+                    <span>Checks Performed</span>
+                </div>
+                <div class="stat-pill">
+                    <strong>Free</strong>
+                    <span>Always & Forever</span>
+                </div>
+            </div>
+
+            <!-- NEW: Mini feature badges below stats -->
+            <div class="hero-mini-features">
+                <div class="hmf-item"><i class="fas fa-shield-alt"></i> ATS Compatible</div>
+                <div class="hmf-item"><i class="fas fa-magic"></i> AI-Powered Builder</div>
+                <div class="hmf-item"><i class="fas fa-lock"></i> 100% Private</div>
+            </div>
         </div>
 
-        <h1 class="hero-title">
-            Is Your Resume <br>
-            <span class="gradient-text">ATS-Ready?</span>
-        </h1>
+        <!-- RIGHT: Preview Card -->
+        <div class="hero-visual">
+            <div class="preview-card animate-float">
+                <div class="preview-header">
+                    <div class="preview-dots">
+                        <span class="dot red"></span>
+                        <span class="dot yellow"></span>
+                        <span class="dot green"></span>
+                    </div>
+                    <span class="preview-title">Resume Score</span>
+                </div>
+                <div class="preview-score">
+                    <div class="score-ring" data-score="87">
+                        <svg viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+                            <circle class="ring-fill" cx="60" cy="60" r="50"
+                                    style="stroke-dashoffset: 85"/>
+                        </svg>
+                        <div class="score-value">87<span>/100</span></div>
+                    </div>
+                </div>
+                <div class="preview-bars">
+                    <div class="bar-item">
+                        <span>Content</span>
+                        <div class="bar"><div class="bar-fill" style="width:90%;background:#10b981"></div></div>
+                        <span>90%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span>Format</span>
+                        <div class="bar"><div class="bar-fill" style="width:85%;background:#3b82f6"></div></div>
+                        <span>85%</span>
+                    </div>
+                    <div class="bar-item">
+                        <span>Keywords</span>
+                        <div class="bar"><div class="bar-fill" style="width:78%;background:#8b5cf6"></div></div>
+                        <span>78%</span>
+                    </div>
+                </div>
+            </div>
 
-        <p class="hero-subtitle">
-            Our AI checks 16 crucial things across 5 categories to ensure your resume
-            gets past Applicant Tracking Systems – you can even paste a job description for
-            relevance scoring.
-        <div class="hero-actions">
-            <a href="{{ url_for('check') }}" class="btn-primary btn-lg">
-                <i class="fas fa-upload"></i> Upload My Resume — It's Free
-            </a>
-            <a href="#how-it-works" class="btn-ghost btn-lg smooth-scroll">
-                <i class="fas fa-play-circle"></i> See How It Works
-            </a>
-        </div>
-
-        <div class="hero-stats">
-            <div class="stat-pill">
-                <strong>{{ stats['total'] or '500+' }}</strong>
-                <span>Resumes Analyzed</span>
+            <!-- Floating mini-cards around the preview card -->
+            <div class="float-badge badge-1 animate-float-slow">
+                <i class="fas fa-check-circle" style="color:#10b981"></i> ATS Passed
             </div>
-            <div class="stat-pill">
-                <strong>{{ stats['avg_job_match'] or '-' }}%</strong>
-                <span>Avg Job Match</span>
+            <div class="float-badge badge-2 animate-float-slow" style="animation-delay:-2s">
+                <i class="fas fa-star" style="color:#f59e0b"></i> Top 15%
             </div>
-            <div class="stat-pill">
-                <strong>16</strong>
-                <span>Checks Performed</span>
+            <div class="float-badge badge-3 animate-float-slow" style="animation-delay:-4s">
+                <i class="fas fa-chart-line" style="color:#8b5cf6"></i> +32% Impact
             </div>
-            <div class="stat-pill">
-                <strong>Free</strong>
-                <span>Always & Forever</span>
+            <div class="float-badge badge-4 animate-float-slow" style="animation-delay:-1s">
+                <i class="fas fa-eye" style="color:#3b82f6"></i> 98% Readable
             </div>
-        </div>
-    </div>
-
-    <!-- Hero Preview Card -->
-    <div class="hero-preview">
-        <div class="preview-card animate-float">
-            <div class="preview-header">
-                <div class="preview-dots">
-                    <span class="dot red"></span>
-                    <span class="dot yellow"></span>
-                    <span class="dot green"></span>
-                </div>
-                <span class="preview-title">Resume Score</span>
-            </div>
-            <div class="preview-score">
-                <div class="score-ring" data-score="87">
-                    <svg viewBox="0 0 120 120">
-                        <circle class="ring-bg" cx="60" cy="60" r="50"/>
-                        <circle class="ring-fill" cx="60" cy="60" r="50"
-                                style="stroke-dashoffset: 85"/>
-                    </svg>
-                    <div class="score-value">87<span>/100</span></div>
-                </div>
-            </div>
-            <div class="preview-bars">
-                <div class="bar-item">
-                    <span>Content</span>
-                    <div class="bar"><div class="bar-fill" style="width:90%;background:#10b981"></div></div>
-                    <span>90%</span>
-                </div>
-                <div class="bar-item">
-                    <span>Format</span>
-                    <div class="bar"><div class="bar-fill" style="width:85%;background:#3b82f6"></div></div>
-                    <span>85%</span>
-                </div>
-                <div class="bar-item">
-                    <span>Keywords</span>
-                    <div class="bar"><div class="bar-fill" style="width:78%;background:#8b5cf6"></div></div>
-                    <span>78%</span>
-                </div>
+            <div class="float-badge badge-5 animate-float-slow" style="animation-delay:-3s">
+                <i class="fas fa-key" style="color:#f59e0b"></i> Keywords: Strong
             </div>
         </div>
     </div>

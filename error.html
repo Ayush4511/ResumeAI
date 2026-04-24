@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang=en>
+  <head>
+    <title>LookupError: 
+**********************************************************************
+  Resource &#39;averaged_perceptron_tagger_eng&#39; not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  &gt;&gt;&gt; import nltk
+  &gt;&gt;&gt; nltk.download(&#39;averaged_perceptron_tagger_eng&#39;)
+
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load &#39;taggers/averaged_perceptron_tagger_eng/&#39;
+
+  Searched in:
+    - &#39;C:\\Users\\Dell/nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\share\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\lib\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\AppData\\Roaming\\nltk_data&#39;
+    - &#39;C:\\nltk_data&#39;
+    - &#39;D:\\nltk_data&#39;
+    - &#39;E:\\nltk_data&#39;
+**********************************************************************
+
+ // Werkzeug Debugger</title>
+    <link rel="stylesheet" href="?__debugger__=yes&amp;cmd=resource&amp;f=style.css">
+    <link rel="shortcut icon"
+        href="?__debugger__=yes&amp;cmd=resource&amp;f=console.png">
+    <script src="?__debugger__=yes&amp;cmd=resource&amp;f=debugger.js"></script>
+    <script>
+      var CONSOLE_MODE = false,
+          EVALEX = true,
+          EVALEX_TRUSTED = false,
+          SECRET = "qZDA33LoLpbVmT52aykW";
+    </script>
+  </head>
+  <body style="background-color: #fff">
+    <div class="debugger">
+<h1>LookupError</h1>
+<div class="detail">
+  <p class="errormsg">LookupError: 
+**********************************************************************
+  Resource &#39;averaged_perceptron_tagger_eng&#39; not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  &gt;&gt;&gt; import nltk
+  &gt;&gt;&gt; nltk.download(&#39;averaged_perceptron_tagger_eng&#39;)
+
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load &#39;taggers/averaged_perceptron_tagger_eng/&#39;
+
+  Searched in:
+    - &#39;C:\\Users\\Dell/nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\share\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\lib\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\AppData\\Roaming\\nltk_data&#39;
+    - &#39;C:\\nltk_data&#39;
+    - &#39;D:\\nltk_data&#39;
+    - &#39;E:\\nltk_data&#39;
+**********************************************************************
+
+</p>
+</div>
+<h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
+<div class="traceback">
+  <h3></h3>
+  <ul><li><div class="frame" id="frame-2843672404640">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">1536</em>,
+      in <code class="function">__call__</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>) -&gt; cabc.Iterable[bytes]:</pre>
+<pre class="line before"><span class="ws">        </span>&#34;&#34;&#34;The WSGI server calls the Flask application object as the</pre>
+<pre class="line before"><span class="ws">        </span>WSGI application. This calls :meth:`wsgi_app`, which can be</pre>
+<pre class="line before"><span class="ws">        </span>wrapped to apply middleware.</pre>
+<pre class="line before"><span class="ws">        </span>&#34;&#34;&#34;</pre>
+<pre class="line current"><span class="ws">        </span>return self.wsgi_app(environ, start_response)
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672403360">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">1514</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line before"><span class="ws">                </span>response = self.full_dispatch_request()</pre>
+<pre class="line before"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line before"><span class="ws">                </span>error = e</pre>
+<pre class="line current"><span class="ws">                </span>response = self.handle_exception(e)
+<span class="ws">                </span>           ^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>except:</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre>
+<pre class="line after"><span class="ws">                </span>raise</pre>
+<pre class="line after"><span class="ws">            </span>return response(environ, start_response)</pre>
+<pre class="line after"><span class="ws">        </span>finally:</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672404800">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">1511</em>,
+      in <code class="function">wsgi_app</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>ctx = self.request_context(environ)</pre>
+<pre class="line before"><span class="ws">        </span>error: BaseException | None = None</pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>try:</pre>
+<pre class="line before"><span class="ws">                </span>ctx.push()</pre>
+<pre class="line current"><span class="ws">                </span>response = self.full_dispatch_request()
+<span class="ws">                </span>           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">            </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">                </span>error = e</pre>
+<pre class="line after"><span class="ws">                </span>response = self.handle_exception(e)</pre>
+<pre class="line after"><span class="ws">            </span>except:</pre>
+<pre class="line after"><span class="ws">                </span>error = sys.exc_info()[1]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672404960">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">919</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>request_started.send(self, _async_wrapper=self.ensure_sync)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line before"><span class="ws">                </span>rv = self.dispatch_request()</pre>
+<pre class="line before"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line current"><span class="ws">            </span>rv = self.handle_user_exception(e)
+<span class="ws">            </span>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(</pre>
+<pre class="line after"><span class="ws">        </span>self,</pre>
+<pre class="line after"><span class="ws">        </span>rv: ft.ResponseReturnValue | HTTPException,</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672405120">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">917</em>,
+      in <code class="function">full_dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>try:</pre>
+<pre class="line before"><span class="ws">            </span>request_started.send(self, _async_wrapper=self.ensure_sync)</pre>
+<pre class="line before"><span class="ws">            </span>rv = self.preprocess_request()</pre>
+<pre class="line before"><span class="ws">            </span>if rv is None:</pre>
+<pre class="line current"><span class="ws">                </span>rv = self.dispatch_request()
+<span class="ws">                </span>     ^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>except Exception as e:</pre>
+<pre class="line after"><span class="ws">            </span>rv = self.handle_user_exception(e)</pre>
+<pre class="line after"><span class="ws">        </span>return self.finalize_request(rv)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def finalize_request(</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672405280">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py"</cite>,
+      line <em class="line">902</em>,
+      in <code class="function">dispatch_request</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">            </span>and req.method == &#34;OPTIONS&#34;</pre>
+<pre class="line before"><span class="ws">        </span>):</pre>
+<pre class="line before"><span class="ws">            </span>return self.make_default_options_response()</pre>
+<pre class="line before"><span class="ws">        </span># otherwise dispatch to the handler for that endpoint</pre>
+<pre class="line before"><span class="ws">        </span>view_args: dict[str, t.Any] = req.view_args  # type: ignore[assignment]</pre>
+<pre class="line current"><span class="ws">        </span>return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+<span class="ws">        </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def full_dispatch_request(self) -&gt; Response:</pre>
+<pre class="line after"><span class="ws">        </span>&#34;&#34;&#34;Dispatches the request and on top of that performs request</pre>
+<pre class="line after"><span class="ws">        </span>pre and postprocessing as well as HTTP exception catching and</pre>
+<pre class="line after"><span class="ws">        </span>error handling.</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672405440">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py"</cite>,
+      line <em class="line">796</em>,
+      in <code class="function">upload</code></h4>
+  <div class="source "><pre class="line before"><span class="ws">        </span>summary results-driven software engineer with 5 years experience</pre>
+<pre class="line before"><span class="ws">        </span>&#34;&#34;&#34;</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span># grab optional job description from form</pre>
+<pre class="line before"><span class="ws">    </span>job_desc = request.form.get(&#34;job_desc&#34;, &#34;&#34;).strip()</pre>
+<pre class="line current"><span class="ws">    </span>result = analyze_resume(text, filename, job_desc if job_desc else None)
+<span class="ws">    </span>         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>result[&#34;_resume_text&#34;] = text[:4000]  # store for AI feedback route</pre>
+<pre class="line after"><span class="ws">    </span>user_id = session.get(&#34;user_id&#34;)</pre>
+<pre class="line after"><span class="ws">    </span>analysis_id = save_analysis(filename, result, job_desc if job_desc else None, user_id=user_id)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span># Clean up file after analysis</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672405760">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py"</cite>,
+      line <em class="line">324</em>,
+      in <code class="function">analyze_resume</code></h4>
+  <div class="source "><pre class="line before"><span class="ws">    </span>word_count = len(words)</pre>
+<pre class="line before"><span class="ws">    </span>issues = []</pre>
+<pre class="line before"><span class="ws">    </span>suggestions = []</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span># keywords extracted from resume (later used for job matching)</pre>
+<pre class="line current"><span class="ws">    </span>resume_keywords = extract_keywords(text)
+<span class="ws">    </span>                  ^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span># ── 1. ATS Parse Rate ─────────────────────────────────────────────────────</pre>
+<pre class="line after"><span class="ws">    </span># Simulates how much content an ATS can parse</pre>
+<pre class="line after"><span class="ws">    </span>readable_chars = len(re.sub(r&#39;[^a-zA-Z0-9\s.,!?;:()\-]&#39;, &#39;&#39;, text))</pre>
+<pre class="line after"><span class="ws">    </span>total_chars = max(len(text), 1)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672405920">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py"</cite>,
+      line <em class="line">280</em>,
+      in <code class="function">extract_keywords</code></h4>
+  <div class="source "><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">        </span>tokens = word_tokenize(text)</pre>
+<pre class="line before"><span class="ws">        </span>words = [w.lower() for w in tokens if w.isalpha()]</pre>
+<pre class="line before"><span class="ws">        </span>sw = set(stopwords.words(&#39;english&#39;))</pre>
+<pre class="line before"><span class="ws">        </span>filtered = [w for w in words if w not in sw]</pre>
+<pre class="line current"><span class="ws">        </span>tagged = pos_tag(filtered)
+<span class="ws">        </span>         ^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>keywords = [w for w, pos in tagged if pos.startswith(&#39;NN&#39;) or pos.startswith(&#39;JJ&#39;)]</pre>
+<pre class="line after"><span class="ws">        </span>freq = {}</pre>
+<pre class="line after"><span class="ws">        </span>for w in keywords:</pre>
+<pre class="line after"><span class="ws">            </span>freq[w] = freq.get(w, 0) + 1</pre>
+<pre class="line after"><span class="ws">        </span>sorted_kw = sorted(freq.items(), key=lambda x: x[1], reverse=True)</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672406080">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py"</cite>,
+      line <em class="line">168</em>,
+      in <code class="function">pos_tag</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">    </span>:param lang: the ISO 639 code of the language, e.g. &#39;eng&#39; for English, &#39;rus&#39; for Russian</pre>
+<pre class="line before"><span class="ws">    </span>:type lang: str</pre>
+<pre class="line before"><span class="ws">    </span>:return: The tagged tokens</pre>
+<pre class="line before"><span class="ws">    </span>:rtype: list(tuple(str, str))</pre>
+<pre class="line before"><span class="ws">    </span>&#34;&#34;&#34;</pre>
+<pre class="line current"><span class="ws">    </span>tagger = _get_tagger(lang)
+<span class="ws">    </span>         ^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>return _pos_tag(tokens, tagset, tagger, lang)</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>def pos_tag_sents(sentences, tagset=None, lang=&#34;eng&#34;):</pre>
+<pre class="line after"><span class="ws">    </span>&#34;&#34;&#34;</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672406240">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py"</cite>,
+      line <em class="line">110</em>,
+      in <code class="function">_get_tagger</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span>@functools.lru_cache</pre>
+<pre class="line before"><span class="ws"></span>def _get_tagger(lang=None):</pre>
+<pre class="line before"><span class="ws">    </span>if lang == &#34;rus&#34;:</pre>
+<pre class="line before"><span class="ws">        </span>tagger = PerceptronTagger(lang=lang)</pre>
+<pre class="line before"><span class="ws">    </span>else:</pre>
+<pre class="line current"><span class="ws">        </span>tagger = PerceptronTagger()
+<span class="ws">        </span>         ^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">    </span>return tagger</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>def _pos_tag(tokens, tagset=None, tagger=None, lang=None):</pre>
+<pre class="line after"><span class="ws">    </span># Currently only supports English and Russian.</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672406400">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py"</cite>,
+      line <em class="line">183</em>,
+      in <code class="function">__init__</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>self.TAGGER_NAME = &#34;averaged_perceptron_tagger&#34;</pre>
+<pre class="line before"><span class="ws">        </span>self.save_dir = path_join(</pre>
+<pre class="line before"><span class="ws">            </span>self.TRAINED_TAGGER_PATH, f&#34;{self.TAGGER_NAME}_{self.lang}&#34;</pre>
+<pre class="line before"><span class="ws">        </span>)</pre>
+<pre class="line before"><span class="ws">        </span>if load:</pre>
+<pre class="line current"><span class="ws">            </span>self.load_from_json(lang, loc)
+<span class="ws">            </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws">    </span>def param_files(self, lang=&#34;eng&#34;):</pre>
+<pre class="line after"><span class="ws">        </span>return (</pre>
+<pre class="line after"><span class="ws">            </span>f&#34;{self.TAGGER_NAME}_{lang}.{attr}.json&#34;</pre>
+<pre class="line after"><span class="ws">            </span>for attr in [&#34;weights&#34;, &#34;tagdict&#34;, &#34;classes&#34;]</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672406560">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py"</cite>,
+      line <em class="line">279</em>,
+      in <code class="function">load_from_json</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>def load_from_json(self, lang=&#34;eng&#34;, loc=None):</pre>
+<pre class="line before"><span class="ws">        </span># Automatically find path to the tagger if location is not specified.</pre>
+<pre class="line before"><span class="ws">        </span># loc can refer to zip or real FS</pre>
+<pre class="line before"><span class="ws">        </span>if loc is None:</pre>
+<pre class="line current"><span class="ws">            </span>loc = find(f&#34;taggers/averaged_perceptron_tagger_{lang}/&#34;)
+<span class="ws">            </span>      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws">        </span>elif isinstance(loc, str):</pre>
+<pre class="line after"><span class="ws">            </span># Backward compatible:</pre>
+<pre class="line after"><span class="ws">            </span># - absolute paths are explicit filesystem locations</pre>
+<pre class="line after"><span class="ws">            </span># - relative strings are treated as NLTK resource names and resolved via find()</pre>
+<pre class="line after"><span class="ws">            </span>if os.path.isabs(loc):</pre></div>
+</div>
+
+<li><div class="frame" id="frame-2843672406720">
+  <h4>File <cite class="filename">"C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\data.py"</cite>,
+      line <em class="line">738</em>,
+      in <code class="function">find</code></h4>
+  <div class="source library"><pre class="line before"><span class="ws">        </span>)</pre>
+<pre class="line before"><span class="ws"></span> </pre>
+<pre class="line before"><span class="ws">    </span>msg += &#34;\n  Searched in:&#34; + &#34;&#34;.join(&#34;\n    - %r&#34; % d for d in paths)</pre>
+<pre class="line before"><span class="ws">    </span>sep = &#34;*&#34; * 70</pre>
+<pre class="line before"><span class="ws">    </span>resource_not_found = f&#34;\n{sep}\n{msg}\n{sep}\n&#34;</pre>
+<pre class="line current"><span class="ws">    </span>raise LookupError(resource_not_found)
+<span class="ws">    </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span> </pre>
+<pre class="line after"><span class="ws"></span>def retrieve(resource_url, filename=None, verbose=True):</pre>
+<pre class="line after"><span class="ws">    </span>&#34;&#34;&#34;</pre>
+<pre class="line after"><span class="ws">    </span>Copy the given resource to a local file.  If no filename is</pre></div>
+</div>
+</ul>
+  <blockquote>LookupError: 
+**********************************************************************
+  Resource &#39;averaged_perceptron_tagger_eng&#39; not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  &gt;&gt;&gt; import nltk
+  &gt;&gt;&gt; nltk.download(&#39;averaged_perceptron_tagger_eng&#39;)
+
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load &#39;taggers/averaged_perceptron_tagger_eng/&#39;
+
+  Searched in:
+    - &#39;C:\\Users\\Dell/nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\share\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\lib\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\AppData\\Roaming\\nltk_data&#39;
+    - &#39;C:\\nltk_data&#39;
+    - &#39;D:\\nltk_data&#39;
+    - &#39;E:\\nltk_data&#39;
+**********************************************************************
+
+</blockquote>
+</div>
+
+<div class="plain">
+    <p>
+      This is the Copy/Paste friendly version of the traceback.
+    </p>
+    <textarea cols="50" rows="10" name="code" readonly>Traceback (most recent call last):
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py&#34;, line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py&#34;, line 796, in upload
+    result = analyze_resume(text, filename, job_desc if job_desc else None)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py&#34;, line 324, in analyze_resume
+    resume_keywords = extract_keywords(text)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py&#34;, line 280, in extract_keywords
+    tagged = pos_tag(filtered)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py&#34;, line 168, in pos_tag
+    tagger = _get_tagger(lang)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py&#34;, line 110, in _get_tagger
+    tagger = PerceptronTagger()
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py&#34;, line 183, in __init__
+    self.load_from_json(lang, loc)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py&#34;, line 279, in load_from_json
+    loc = find(f&#34;taggers/averaged_perceptron_tagger_{lang}/&#34;)
+  File &#34;C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\data.py&#34;, line 738, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource &#39;averaged_perceptron_tagger_eng&#39; not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  &gt;&gt;&gt; import nltk
+  &gt;&gt;&gt; nltk.download(&#39;averaged_perceptron_tagger_eng&#39;)
+
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load &#39;taggers/averaged_perceptron_tagger_eng/&#39;
+
+  Searched in:
+    - &#39;C:\\Users\\Dell/nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\share\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\lib\\nltk_data&#39;
+    - &#39;C:\\Users\\Dell\\AppData\\Roaming\\nltk_data&#39;
+    - &#39;C:\\nltk_data&#39;
+    - &#39;D:\\nltk_data&#39;
+    - &#39;E:\\nltk_data&#39;
+**********************************************************************
+
+</textarea>
+</div>
+<div class="explanation">
+  The debugger caught an exception in your WSGI application.  You can now
+  look at the traceback which led to the error.  <span class="nojavascript">
+  If you enable JavaScript you can also use additional features such as code
+  execution (if the evalex feature is enabled), automatic pasting of the
+  exceptions and much more.</span>
+</div>
+      <div class="footer">
+        Brought to you by <strong class="arthur">DON'T PANIC</strong>, your
+        friendly Werkzeug powered traceback interpreter.
+      </div>
+    </div>
+
+    <div class="pin-prompt">
+      <div class="inner">
+        <h3>Console Locked</h3>
+        <p>
+          The console is locked and needs to be unlocked by entering the PIN.
+          You can find the PIN printed out on the standard output of your
+          shell that runs the server.
+        <form>
+          <p>PIN:
+            <input type=text name=pin size=14>
+            <input type=submit name=btn value="Confirm Pin">
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
+<!--
+
+Traceback (most recent call last):
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 1536, in __call__
+    return self.wsgi_app(environ, start_response)
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 1514, in wsgi_app
+    response = self.handle_exception(e)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py", line 796, in upload
+    result = analyze_resume(text, filename, job_desc if job_desc else None)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py", line 324, in analyze_resume
+    resume_keywords = extract_keywords(text)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\app.py", line 280, in extract_keywords
+    tagged = pos_tag(filtered)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py", line 168, in pos_tag
+    tagger = _get_tagger(lang)
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\__init__.py", line 110, in _get_tagger
+    tagger = PerceptronTagger()
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py", line 183, in __init__
+    self.load_from_json(lang, loc)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\tag\perceptron.py", line 279, in load_from_json
+    loc = find(f"taggers/averaged_perceptron_tagger_{lang}/")
+  File "C:\Users\Dell\OneDrive\Desktop\ResumeAI\.venv\Lib\site-packages\nltk\data.py", line 738, in find
+    raise LookupError(resource_not_found)
+LookupError: 
+**********************************************************************
+  Resource 'averaged_perceptron_tagger_eng' not found.
+  Please use the NLTK Downloader to obtain the resource:
+
+  >>> import nltk
+  >>> nltk.download('averaged_perceptron_tagger_eng')
+
+  For more information see: https://www.nltk.org/data.html
+
+  Attempted to load 'taggers/averaged_perceptron_tagger_eng/'
+
+  Searched in:
+    - 'C:\\Users\\Dell/nltk_data'
+    - 'C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\nltk_data'
+    - 'C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\share\\nltk_data'
+    - 'C:\\Users\\Dell\\OneDrive\\Desktop\\ResumeAI\\.venv\\lib\\nltk_data'
+    - 'C:\\Users\\Dell\\AppData\\Roaming\\nltk_data'
+    - 'C:\\nltk_data'
+    - 'D:\\nltk_data'
+    - 'E:\\nltk_data'
+**********************************************************************
+
+
+
+-->
